@@ -1,0 +1,11 @@
+### Maven ###
+target
+
+### Java ###
+*.class
+
+### IntelliJ IDEA ###
+.idea
+
+### Mac OS ###
+.DS_Store
