@@ -31,18 +31,22 @@ public class HelloServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
-        StringBuilder jsonBuilder = new StringBuilder();
-        String line;
-        try (BufferedReader reader = req.getReader()) {
-            while ((line = reader.readLine()) != null) {
-                jsonBuilder.append(line);
+        if(req.getHeader("content-type").equals("application/json")){
+            StringBuilder jsonBuilder = new StringBuilder();
+            String line;
+            try (BufferedReader reader = req.getReader()) {
+                while ((line = reader.readLine()) != null) {
+                    jsonBuilder.append(line);
+                }
             }
+
+            ObjectMapper mapper = new ObjectMapper();
+            TicketBusiness newTicket = mapper.readValue(jsonBuilder.toString(), TicketBusiness.class);
+            ticketList.add(newTicket);
+
+        } else if(req.getHeader("content-type").equals("application/x-www-form-urlencoded")){
+            TicketBusiness request = new TicketBusiness(req.getParameter("title"), req.getParameter("description"), req.getParameter("author"));
+            ticketList.add(request);
         }
-
-        ObjectMapper mapper = new ObjectMapper();
-        TicketBusiness newTicket = mapper.readValue(jsonBuilder.toString(), TicketBusiness.class);
-
-        ticketList.add(newTicket);
-
     }
 }
