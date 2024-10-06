@@ -9,6 +9,7 @@ import ch.supsi.business.TicketBusiness;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -129,7 +130,115 @@ public class HelloServlet extends HttpServlet {
     protected void doPut(HttpServletRequest req, HttpServletResponse res) throws IOException {
         String contentType = req.getHeader("content-type");
 
-        // Estrai l'ID del ticket dalla path (esempio: /tickets/1)
+        String pathInfo = req.getPathInfo();
+        if (pathInfo == null || pathInfo.equals("/")) {
+            sendResponse(res, HttpServletResponse.SC_METHOD_NOT_ALLOWED, "{\"message\": \"Missing ticket ID in path\"}");
+            return;
+        }
+        try {
+            int ticketId = getTicketID(pathInfo);
+
+            TicketBusiness ticketToUpdate = findFromId(ticketId);
+            if (ticketToUpdate == null) {
+                sendResponse(res, HttpServletResponse.SC_NOT_FOUND, "{\"message\": \"Ticket not found\"}");
+                return;
+            }
+
+            if (contentType != null && contentType.equalsIgnoreCase("application/json")) {
+
+                ObjectMapper mapper = new ObjectMapper();
+                TicketBusiness updatedTicket;
+                try {
+                    String content = getJsonBuilder(req).toString();
+                    if(!(content.contains("title") && content.contains("description") && content.contains("author"))){
+                        sendResponse(res, HttpServletResponse.SC_BAD_REQUEST, "{\"message\": \"Missing a field to update, use Patch to update partially a ticket\"}");
+                        return;
+                    }
+                    updatedTicket = mapper.readValue(content, TicketBusiness.class);
+                } catch (Exception e) {
+                    sendResponse(res, HttpServletResponse.SC_BAD_REQUEST, "{\"message\": \"Invalid JSON format\"}");
+                    return;
+                }
+
+                ticketToUpdate.setTitle(updatedTicket.getTitle());
+                ticketToUpdate.setDescription(updatedTicket.getDescription());
+                ticketToUpdate.setAuthor(updatedTicket.getAuthor());
+
+                sendResponse(res, HttpServletResponse.SC_OK, "{\"message\": \"Ticket updated\", \"id\": " + ticketToUpdate.getId() + "}");
+            } else if (contentType != null && contentType.equalsIgnoreCase("application/x-www-form-urlencoded")) {
+
+                if(!req.getParameterMap().keySet().containsAll(List.of("title", "description", "author"))) {
+                    sendResponse(res, HttpServletResponse.SC_BAD_REQUEST, "{\"message\": \"Missing a field to update, use Patch to update partially a ticket\"}");
+                    return;
+                }
+                ticketToUpdate.setTitle(req.getParameter("title"));
+                ticketToUpdate.setDescription(req.getParameter("description"));
+                ticketToUpdate.setAuthor(req.getParameter("author"));
+
+                sendResponse(res, HttpServletResponse.SC_OK, "{\"message\": \"Ticket updated\", \"id\": " + ticketToUpdate.getId() + "}");
+            } else {
+                sendResponse(res, HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE, "{\"message\": \"Unsupported Content-Type\"}");
+            }
+
+        } catch (NumberFormatException e) {
+            sendResponse(res, HttpServletResponse.SC_BAD_REQUEST, "{\"message\": \"Invalid ticket ID\"}");
+        }
+    }
+
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse res) throws IOException {
+        if(req.getPathInfo() == null || req.getPathInfo().equals("/")){
+            List<TicketBusiness> ticketsToDelete = parseParameter(req);
+
+            if (ticketsToDelete.isEmpty()) {
+                sendResponse(res, HttpServletResponse.SC_NOT_FOUND, "{\"message\": \"No tickets found for the given parameters\"}");
+                return;
+            }
+
+            ticketList.removeAll(ticketsToDelete);
+
+            sendResponse(res, HttpServletResponse.SC_OK, "{\"message\": \"Tickets deleted\", \"deletedCount\": " + ticketsToDelete.size() + "}");
+        }
+        else {
+            String pathInfo = req.getPathInfo();
+            if (pathInfo == null || pathInfo.equals("/")) {
+                sendResponse(res, HttpServletResponse.SC_BAD_REQUEST, "{\"message\": \"Missing ticket ID in path or query string\"}");
+                return;
+            }
+
+            try {
+                int ticketId = getTicketID(pathInfo);
+
+                TicketBusiness ticketToDelete = findFromId(ticketId);
+                if (ticketToDelete == null) {
+                    sendResponse(res, HttpServletResponse.SC_NOT_FOUND, "{\"message\": \"Ticket not found\"}");
+                    return;
+                }
+
+                ticketList.remove(ticketToDelete);
+                sendResponse(res, HttpServletResponse.SC_NO_CONTENT, "");
+
+            } catch (NumberFormatException e) {
+                sendResponse(res, HttpServletResponse.SC_BAD_REQUEST, "{\"message\": \"Invalid ticket ID\"}");
+
+            }
+        }
+    }
+
+    @Override
+    protected void service(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+        String method = req.getMethod();
+        if (method.equalsIgnoreCase("PATCH")) {
+            this.doPatch(req, resp);
+            return;
+        }
+        super.service(req, resp);
+    }
+
+
+    protected void doPatch(HttpServletRequest req, HttpServletResponse res) throws IOException {
+        String contentType = req.getHeader("content-type");
+
         String pathInfo = req.getPathInfo();
         if (pathInfo == null || pathInfo.equals("/")) {
             sendResponse(res, HttpServletResponse.SC_METHOD_NOT_ALLOWED, "{\"message\": \"Missing ticket ID in path\"}");
@@ -162,6 +271,7 @@ public class HelloServlet extends HttpServlet {
                 sendResponse(res, HttpServletResponse.SC_OK, "{\"message\": \"Ticket updated\", \"id\": " + ticketToUpdate.getId() + "}");
             } else if (contentType != null && contentType.equalsIgnoreCase("application/x-www-form-urlencoded")) {
 
+
                 ticketToUpdate.setTitle(req.getParameter("title"));
                 ticketToUpdate.setDescription(req.getParameter("description"));
                 ticketToUpdate.setAuthor(req.getParameter("author"));
@@ -174,6 +284,5 @@ public class HelloServlet extends HttpServlet {
         } catch (NumberFormatException e) {
             sendResponse(res, HttpServletResponse.SC_BAD_REQUEST, "{\"message\": \"Invalid ticket ID\"}");
         }
-
     }
 }
