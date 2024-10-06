@@ -114,7 +114,7 @@ public class HelloServlet extends HttpServlet {
             newTicket = new TicketBusiness(req.getParameter("title"), req.getParameter("description"), req.getParameter("author"));
 
         } else {
-            sendResponse(res, HttpServletResponse.SC_BAD_REQUEST, "{\"message\": \"Invalid request\"}");
+            sendResponse(res, HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE, "{\"message\": \"Unsupported Content-Type\"}");
             return;
         }
 
