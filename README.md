@@ -1,31 +1,28 @@
 # Tickets API
 
-L'API per la gestione dei ticket consente di recuperare informazioni sui ticket registrati. Può essere utilizzata per gestire dei ticket, l'api mette a disposizione diversi metodi per la gestione dei dati tra cui POST, GET, DELETE, PATCH e PUT
+The Ticket Management API allows you to retrieve and manage registered tickets. It provides various methods for handling data, including `POST`, `GET`, `DELETE`, `PATCH`, and `PUT`.
 
-## Endpoint per il recupero dei ticket
+## Ticket Retrieval Endpoint
 
-**URL** : `/tickets/`
+**URL**: `/tickets/`
 
-**Method** : `GET`
+**Method**: `GET`
 
-### 1. Recupera tutti i ticket
+### 1. Retrieve All Tickets
 
-- **URL** : `/tickets/`
+- **URL**: `/tickets/`
+- **Method**: `GET`
+- **Query Parameters**: None
 
-- **Method** : `GET`
-
-- **Query Parameters** : Nessuno
-
-**Example Request** :
+**Example Request**:
 ```http
 GET /tickets/ HTTP/1.1
 Host: localhost:8080
 ```
+
 **Success Response**:
-- Code : `200 OK`
-
-**Content Example**:
-
+- **Code**: `200 OK`
+- **Content Example**:
 ```json
 [
     {
@@ -42,445 +39,392 @@ Host: localhost:8080
     }
 ]
 ```
-**Error response**:
-nessuno
 
-### 2. Filtra i ticket in base ai parametri
+**Error Response**: None
 
-- **URL** : `/tickets/`
+### 2. Filter Tickets by Parameters
 
-- **Method** : `GET`
+- **URL**: `/tickets/`
+- **Method**: `GET`
+- **Query Parameters**:
+    - `title` (optional)
+    - `author` (optional)
+    - `description` (optional)
 
-- **Query Parameters** :
-  `title` (facoltativo)
-  `author` (facoltativo)
-  `description` (facoltativo)
-
-**Example Request** :
+**Example Request**:
 ```http
-GET /tickets/?author=lorenzo&title=malfunzionamento HTTP/1.1
+GET /tickets/?author=lorenzo&title=malfunction HTTP/1.1
 Host: localhost:8080
 ```
+
 **Success Response**:
-- Code : `200 OK`
-
-**Content Example**:
-
+- **Code**: `200 OK`
+- **Content Example**:
 ```json
 [
-  
     {
-      "title": "malfunzionamento",
-      "description": "non carica le immagini nella home",
-      "author": "lorenzo",
-      "id": 3
+        "id": 3,
+        "title": "malfunction",
+        "description": "images not loading on homepage",
+        "author": "lorenzo"
     },
-  {
-    "title": "malfunzionamento",
-    "description": "non funziona il login",
-    "author": "lorenzo",
-    "id": 10
-  }
-  
+    {
+        "id": 10,
+        "title": "malfunction",
+        "description": "login not working",
+        "author": "lorenzo"
+    }
 ]
 ```
-**Error response**:
-- Code : `404 NOT FOUND`
 
-**Content Example**:
-
+**Error Response**:
+- **Code**: `404 NOT FOUND`
+- **Content Example**:
 ```json
 {
   "message": "ticket not found"
 }
 ```
-### 3. Recupera un singolo ticket in base all'ID
 
-- **URL** : `/tickets/{id}`
+### 3. Retrieve a Single Ticket by ID
 
-- **Method** : `GET`
+- **URL**: `/tickets/{id}`
+- **Method**: `GET`
+- **Path Parameters**:
+    - `id`: The ID of the ticket to retrieve
 
-- **Query Parameters**:
-  `id`: id del ticket da recuperare
-
-**Example Request** :
+**Example Request**:
 ```http
 GET /tickets/2 HTTP/1.1
 Host: localhost:8080
 ```
+
 **Success Response**:
-- Code : `200 OK`
-
-**Content Example**:
-
+- **Code**: `200 OK`
+- **Content Example**:
 ```json
-
 {
-  "title": "Titolo",
-  "description": "Descrizione del ticket",
-  "author": "Staff",
-  "id": 2
+    "id": 2,
+    "title": "Title",
+    "description": "Ticket description",
+    "author": "Staff"
 }
 ```
-**Error response**:
-- Condition: Se l'id fornito non è presente nel database
-- Code : `404 NOT FOUND`
 
-**Content Example**:
-
+**Error Response**:
+- **Condition**: If the provided ID is not found
+- **Code**: `404 NOT FOUND`
+- **Content Example**:
 ```json
 {
   "message": "ticket not found"
 }
 ```
-**Error response**:
-- Condition: Se l'id fornito non è un intero
-- Code : `405 BAD REQUEST`
-
-**Content Example**:
-
+- **Condition**: If the provided ID is not an integer
+- **Code**: `405 BAD REQUEST`
+- **Content Example**:
 ```json
 {
   "message": "Invalid ticket ID"
 }
 ```
 
-### 4. Aggiorna un ticket esistente (PUT)
+### 4. Update an Existing Ticket (PUT)
 
-**URL** : `/tickets/{id}`
+**URL**: `/tickets/{id}`
+**Method**: `PUT`
 
-**Method** : `PUT`
-
-L'endpoint permette di aggiornare un ticket esistente. È richiesto di fornire tutti i campi del ticket (`title`, `description`, `author`) per eseguire un aggiornamento completo. Per aggiornamenti parziali, è consigliato utilizzare il metodo `PATCH`.
+This endpoint allows updating an existing ticket. You must provide all fields of the ticket (`title`, `description`, `author`) for a full update. For partial updates, use the `PATCH` method.
 
 #### Request Content-Type
 - `application/json`
 - `application/x-www-form-urlencoded`
 
-#### Query Parameters
-- `id` : ID del ticket da aggiornare (incluso nell'URL)
+#### Path Parameters
+- `id`: The ID of the ticket to update (included in the URL)
 
-#### Body Parameters (necessari per entrambi i Content-Type)
-- `title` (stringa): Titolo aggiornato del ticket
-- `description` (stringa): Descrizione aggiornata del ticket
-- `author` (stringa): Autore aggiornato del ticket
+#### Body Parameters (required for both Content-Types)
+- `title` (string): The updated title of the ticket
+- `description` (string): The updated description of the ticket
+- `author` (string): The updated author of the ticket
 
-#### Example Request (JSON)
-
+**Example Request (JSON)**:
 ```http
 PUT /tickets/1 HTTP/1.1
 Host: localhost:8080
 Content-Type: application/json
 
 {
-    "title": "Nuovo titolo",
-    "description": "Nuova descrizione",
-    "author": "Autore aggiornato"
+    "title": "Updated title",
+    "description": "Updated description",
+    "author": "Updated author"
 }
 ```
-#### Example Request (Form-urlencoded)
+
+**Example Request (Form-urlencoded)**:
 ```http
 PUT /tickets/1 HTTP/1.1
 Host: localhost:8080
 Content-Type: application/x-www-form-urlencoded
 
-title=Nuovo+titolo&description=Nuova+descrizione&author=Autore+aggiornato
+title=Updated+title&description=Updated+description&author=Updated+author
 ```
 
 **Success Response**:
-- Code : `200 OK`
-
-**Content Example**:
-
+- **Code**: `200 OK`
+- **Content Example**:
 ```json
-
 {
   "message": "Ticket updated",
   "id": 1
 }
 ```
-**Error response**:
-- Condition: Se l'id fornito non è presente nel database
-- Code : `404 NOT FOUND`
 
-**Content Example**:
-
+**Error Response**:
+- **Condition**: If the provided ID is not found
+- **Code**: `404 NOT FOUND`
+- **Content Example**:
 ```json
 {
   "message": "ticket not found"
 }
 ```
-**Error response**:
-- Condition: Se l'id fornito non è valido
-- Code : `404 NOT FOUND`
-
-**Content Example**:
-
+- **Condition**: If the provided ID is invalid
+- **Code**: `404 NOT FOUND`
+- **Content Example**:
 ```json
 {
   "message": "Invalid ticket ID"
 }
 ```
-
-**Error response**:
-- Condition: Se il Content-Type fornito non è supportato (né application/json né application/x-www-form-urlencoded).
-- Code : `415 UNSUPPORTED MEDIA TYPE`
-
-**Content Example**:
-
+- **Condition**: If the provided Content-Type is unsupported
+- **Code**: `415 UNSUPPORTED MEDIA TYPE`
+- **Content Example**:
 ```json
 {
   "message": "Unsupported Content-Type"
 }
 ```
-**Error response**:
-- Condition: Se manca un campo obbligatorio nel corpo della richiesta (title, description, o author), o se si tenta di aggiornare un ticket con un corpo incompleto (invece di usare PATCH per aggiornamenti parziali).
-- Code : `400 BAD REQUEST`
-
-**Content Example**:
-
+- **Condition**: If a required field is missing (e.g., `title`, `description`, or `author`)
+- **Code**: `400 BAD REQUEST`
+- **Content Example**:
 ```json
 {
   "message": "Missing a field to update, use Patch to update partially a ticket"
 }
 ```
-### 5. Elimina uno o più ticket (DELETE)
 
-L'endpoint permette di eliminare uno o più ticket. Può essere utilizzato per eliminare un ticket specifico tramite il suo ID o per eliminare ticket filtrati in base a parametri come `title`, `description`, o `author`.
+### 5. Delete One or More Tickets (DELETE)
 
-**URL** : `/tickets/`
+This endpoint allows you to delete one or more tickets. You can delete a specific ticket by ID or delete tickets that match certain search parameters such as `title`, `description`, or `author`.
 
-**Method** : `DELETE`
+#### 1. Delete Tickets by Parameters
 
-#### 1. Elimina uno o più ticket in base ai parametri
-
-È possibile eliminare uno o più ticket che corrispondono a determinati parametri di ricerca.
-
-**URL** : `/tickets/`
-
-**Method** : `DELETE`
-
-**Query Parameters**:
-- `title`(facoltativo): Titolo del ticket.
-- `description`(facoltativo): Descrizione del ticket.
-- `author`(facoltativo): Autore del ticket.
+- **URL**: `/tickets/`
+- **Method**: `DELETE`
+- **Query Parameters**:
+    - `title` (optional): The title of the ticket(s) to delete
+    - `description` (optional): The description of the ticket(s) to delete
+    - `author` (optional): The author of the ticket(s) to delete
 
 **Example Request**:
 ```http
 DELETE /tickets/?author=lorenzo&title=bug HTTP/1.1
 Host: localhost:8080
 ```
+
 **Success Response**:
-- Code : `200 OK`
-
-**Content Example**:
-
+- **Code**: `200 OK`
+- **Content Example**:
 ```json
-
 {
   "message": "Tickets deleted",
   "deletedCount": 2
 }
 ```
-**Error response**:
-- Condition: Se nessun ticket corrisponde ai parametri forniti.
-- Code : `404 NOT FOUND`
 
-**Content Example**:
-
+**Error Response**:
+- **Condition**: If no tickets match the provided parameters
+- **Code**: `404 NOT FOUND`
+- **Content Example**:
 ```json
 {
   "message": "No tickets found for the given parameters"
 }
 ```
-#### 2. Eliminare un ticket in base all'id
 
-È possibile eliminare un ticket specifico in base al suo ID.
+#### 2. Delete a Ticket by ID
 
-**URL** : `/tickets/{id}`
-
-**Method** : `DELETE`
--**Path Parameters**:
-id: L'ID del ticket da eliminare.
-
--**Query Parameters**:
-none
+- **URL**: `/tickets/{id}`
+- **Method**: `DELETE`
+- **Path Parameters**:
+    - `id`: The ID of the ticket to delete
 
 **Example Request**:
 ```http
 DELETE /tickets/1 HTTP/1.1
 Host: localhost:8080
 ```
+
 **Success Response**:
-- Code : `204 NO CONTENT`
+- **Code**: `204 NO CONTENT`
+- **Content Example**: No content (empty response)
 
-**Content Example**:
-Nessun contenuto (risposta vuota)
-
-
-**Error response**:
-- Condition: Se l'id fornito non è presente nel database
-- Code : `404 NOT FOUND`
-
-**Content Example**:
-
+**Error Response**:
+- **Condition**: If the provided ID is not found
+- **Code**: `404 NOT FOUND`
+- **Content Example**:
 ```json
 {
-  "message": "Ticket not found"
+  "message": "ticket not found"
 }
 ```
-**Error response**:
-- Condition: Se l'id fornito non è valido
-- Code : `404 NOT FOUND`
-
-**Content Example**:
-
+- **Condition**: If the provided ID is invalid
+- **Code**: `404 NOT FOUND`
+- **Content Example**:
 ```json
 {
   "message": "Invalid ticket ID"
 }
 ```
-### 6. Crea un nuovo ticket (POST)
 
-L'endpoint consente di creare un nuovo ticket. Supporta sia la creazione di ticket inviando i dati in formato JSON, sia utilizzando il formato `application/x-www-form-urlencoded`.
+### 6. Create a New Ticket (POST)
 
-**URL** : `/tickets/`
+This endpoint allows you to create a new ticket. You can send the ticket data either in `JSON` format or as `application/x-www-form-urlencoded`.
 
-**Method** : `POST`
+**URL**: `/tickets/`
+**Method**: `POST`
 
 #### Request Content-Type
 - `application/json`
 - `application/x-www-form-urlencoded`
 
 #### Body Parameters
-- `title` (stringa): Titolo del ticket.
-- `description` (stringa): Descrizione del ticket.
-- `author` (stringa): Autore del ticket.
+- `title` (string): The title of the new ticket
+- `description` (string): The description of the new ticket
+- `author` (string): The author of the new ticket
 
-#### Example Request (JSON)
-
+**Example Request (JSON)**:
 ```http
 POST /tickets/ HTTP/1.1
 Host: localhost:8080
 Content-Type: application/json
 
 {
-    "title": "Nuovo ticket",
-    "description": "Descrizione del nuovo ticket",
-    "author": "Autore del ticket"
+    "title": "New ticket",
+    "description": "Description of the new ticket",
+    "author": "Ticket author"
 }
 ```
-#### Example Request (Form-urlencoded)
+
+**Example Request (Form-urlencoded)**:
 ```http
 POST /tickets/ HTTP/1.1
 Host: localhost:8080
 Content-Type: application/x-www-form-urlencoded
 
-title=Nuovo+ticket&description=Descrizione+del+nuovo+ticket&author=Autore+del+ticket
+title=New+ticket&description=Description+of+the+new+ticket&author=Ticket+author
 ```
-**Success Response**:
-- Code : `201 CREATED`
 
-**Content Example**:
+**Success Response**:
+- **Code**: `201 CREATED`
+- **Content Example**:
 ```json
 {
-"message": "Ticket created",
-"id": 1
+  "message": "Ticket created",
+  "id": 1
 }
 ```
 
-**Error response**:
-- Condition: Se viene fornito un Content-Type non valido (né application/json né application/x-www-form-urlencoded).
-- Code : `415 UNSUPPORTED MEDIA TYPE`
-
-**Content Example**:
-
+**Error Response**:
+- **Condition**: If the provided Content-Type is unsupported
+- **Code**: `415 UNSUPPORTED MEDIA TYPE`
+- **Content Example**:
 ```json
 {
   "message": "Unsupported Content-Type"
 }
 ```
-**Error response**:
-- Condition: Se il ticket che si sta tentando di creare esiste già.
-- Code : `409 CONFLICT`
+- **Condition**: If the ticket being created already exists
+- **Code**:
 
-**Content Example**:
-
+`409 CONFLICT`
+- **Content Example**:
 ```json
 {
   "message": "Ticket already exists"
 }
 ```
-### 4. Aggiorna un ticket esistente (PUT)
+### 4. Update an Existing Ticket (PUT)
 
-**URL** : `/tickets/{id}`
+**URL**: `/tickets/{id}`
 
-**Method** : `PUT`
+**Method**: `PATCH`
 
-L'endpoint permette di aggiornare un ticket esistente. a differenza del PUT, non è richiesto di fornire tutti i campi del ticket (`title`, `description`, `author`). questo metodo aggiornerà esclusivamente i campi segnalati nella richiesta, lasciano invariati gli altri
+This endpoint allows updating an existing ticket. Unlike `PUT`, it is not required to provide all fields of the ticket (`title`, `description`, `author`). This method will only update the fields specified in the request, leaving the other fields unchanged.
 
 #### Request Content-Type
 - `application/json`
 - `application/x-www-form-urlencoded`
 
-#### Query Parameters
-- `id` : ID del ticket da aggiornare (incluso nell'URL)
+#### Path Parameters
+- `id`: The ID of the ticket to update (included in the URL)
 
-#### Body Parameters (facoltativi)
-- `title` (stringa): Titolo aggiornato del ticket
-- `description` (stringa): Descrizione aggiornata del ticket
-- `author` (stringa): Autore aggiornato del ticket
+#### Body Parameters (optional)
+- `title` (string): The updated title of the ticket
+- `description` (string): The updated description of the ticket
+- `author` (string): The updated author of the ticket
 
 #### Example Request (JSON)
 
 ```http
-PUT /tickets/1 HTTP/1.1
+PATCH /tickets/1 HTTP/1.1
 Host: localhost:8080
 Content-Type: application/json
 
 {
-    "title": "Nuovo titolo",
-    "description": "Nuova descrizione",
-    "author": "Autore aggiornato"
+    "title": "New title",
+    "description": "New description",
+    "author": "Updated author"
 }
 ```
+
 #### Example Request (Form-urlencoded)
+
 ```http
-PUT /tickets/1 HTTP/1.1
+PATCH /tickets/1 HTTP/1.1
 Host: localhost:8080
 Content-Type: application/x-www-form-urlencoded
 
-title=Nuovo+titolo&description=Nuova+descrizione&author=Autore+aggiornato
+title=New+title&description=New+description&author=Updated+author
 ```
 
 **Success Response**:
-- Code : `200 OK`
-
-**Content Example**:
+- **Code**: `200 OK`
+- **Content Example**:
 
 ```json
-
 {
   "message": "Ticket updated",
   "id": 1
 }
 ```
-**Error response**:
-- Condition: Se l'id fornito non è presente nel database
-- Code : `404 NOT FOUND`
 
-**Content Example**:
+**Error Response**:
+
+- **Condition**: If the provided ID is not found
+- **Code**: `404 NOT FOUND`
+- **Content Example**:
 
 ```json
 {
   "message": "ticket not found"
 }
 ```
-**Error response**:
-- Condition: Se l'id fornito non è valido
-- Code : `404 NOT FOUND`
 
-**Content Example**:
+- **Condition**: If the provided ID is invalid
+- **Code**: `404 NOT FOUND`
+- **Content Example**:
 
 ```json
 {
@@ -488,15 +432,12 @@ title=Nuovo+titolo&description=Nuova+descrizione&author=Autore+aggiornato
 }
 ```
 
-**Error response**:
-- Condition: Se il Content-Type fornito non è supportato (né application/json né application/x-www-form-urlencoded).
-- Code : `415 UNSUPPORTED MEDIA TYPE`
-
-**Content Example**:
+- **Condition**: If the provided Content-Type is unsupported (neither `application/json` nor `application/x-www-form-urlencoded`)
+- **Code**: `415 UNSUPPORTED MEDIA TYPE`
+- **Content Example**:
 
 ```json
 {
   "message": "Unsupported Content-Type"
 }
 ```
-
