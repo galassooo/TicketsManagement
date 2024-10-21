@@ -1,5 +1,6 @@
 package ch.supsi.ticket;
 
+import ch.supsi.ticket.model.Ticket;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

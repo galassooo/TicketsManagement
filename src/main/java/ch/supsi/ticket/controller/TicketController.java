@@ -1,11 +1,12 @@
 package ch.supsi.ticket.controller;
 
 
-import ch.supsi.ticket.Ticket;
-import ch.supsi.ticket.TicketApplication;
+import ch.supsi.ticket.model.Ticket;
+import ch.supsi.ticket.model.TicketDTO;
+import ch.supsi.ticket.service.TicketService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -15,45 +16,40 @@ import java.util.Optional;
 @RequestMapping("/tickets")
 public class TicketController {
 
+    @Autowired
+    private TicketService ticketService;
+
     @GetMapping("{id}")
-    private ResponseEntity<Ticket> getTicket(@PathVariable("id") String id) {
-        Optional<Ticket> ticket = TicketApplication.ALL_TICKETS.stream().filter(
-                t -> t.getUuid().toString().equals(id)).findFirst();
+    private ResponseEntity<Ticket> getTicket(@PathVariable("id") Long id) {
+        Optional<Ticket> ticket = ticketService.getTicket(id);
         return ticket.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping
     private List<Ticket> getTickets() {
-        return TicketApplication.ALL_TICKETS;
+        return ticketService.getTickets();
     }
 
     @PostMapping
-    private ResponseEntity<Ticket> createTicket(@RequestBody Ticket ticket) throws URISyntaxException {
-        TicketApplication.ALL_TICKETS.add(ticket);
-        return ResponseEntity.created(new URI("/tickets/" + ticket.getUuid().toString())).body(ticket);
+    private ResponseEntity<Ticket> createTicket(@RequestBody TicketDTO ticketDTO) throws URISyntaxException {
+        Ticket ticket = ticketService.createTicket(ticketDTO);
+        return ResponseEntity.created(new URI("/tickets/" + ticket.getId())).body(ticket);
     }
 
     @PutMapping("{id}")
-    private ResponseEntity<Ticket> updateTicket(@PathVariable("id") String id,@RequestBody Ticket ticket ) {
-        Optional<Ticket> toBeUpdate = TicketApplication.ALL_TICKETS.stream().filter(
-                t -> t.getUuid().toString().equals(id)).findFirst();
-        if(toBeUpdate.isPresent()) {
-            toBeUpdate.get().setDescription(ticket.getDescription());
-            toBeUpdate.get().setTitle(ticket.getTitle());
-            toBeUpdate.get().setAuthor(ticket.getAuthor());
+    private ResponseEntity<Ticket> updateTicket(@PathVariable("id") Long id,@RequestBody TicketDTO ticket ) {
+        Ticket tck = ticketService.updateTicket(id, ticket);
+        if(tck != null) {
 
-            return ResponseEntity.ok(toBeUpdate.get());
+            return ResponseEntity.ok(tck);
         }
         else {
             return ResponseEntity.notFound().build();
         }
-
     }
     @DeleteMapping("{id}")
-    private ResponseEntity<String> deleteTicket(@PathVariable("id") String id) {
-        boolean removed = TicketApplication.ALL_TICKETS.removeIf(t -> t.getUuid().toString().equals(id));
-
-        if(removed){
+    private ResponseEntity<String> deleteTicket(@PathVariable("id") Long id) {
+        if(ticketService.deleteTicket(id)) {
             return ResponseEntity.status(200).body("{\n\"success\": true\n}");
         }else {
             return ResponseEntity.status(404).build();
