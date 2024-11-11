@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${ticket.present ? 'Ticket #' + ticket.get().id : 'Ticket non trovato'}">Ticket Details</title>
+    <link rel="stylesheet" th:href="@{/css/ticketStyle.css}">
+</head>
+<body>
+<header>
+    <img th:src="@{/images/ticket-img.png}" height="100" alt="Ticket Logo">
+    <h1>Ticket Server</h1>
+</header>
+<nav>
+    <ul style="list-style-type: none; padding: 0; display: flex; gap: 15px;">
+        <li><a th:href="@{/tickets/{id}/delete(id=${ticket.get().id})}">Delete page</a></li>
+        <li><a th:href="@{/tickets/{id}/edit(id=${ticket.get().id})}">Edit page</a></li>
+    </ul>
+</nav>
+<main>
+    <!-- Messaggio di errore se il ticket non esiste -->
+    <div th:if="${!ticket.present}" class="error-message">
+        <h2>Ticket non trovato</h2>
+        <p>Il ticket richiesto non esiste.</p>
+    </div>
+
+    <!-- Dettagli del ticket se esiste -->
+    <article th:if="${ticket.present}">
+        <h2 th:text="${'Ticket #' + ticket.get().id + ': ' + ticket.get().title}">Ticket Title</h2>
+        <p>
+            <strong>Descrizione:</strong>
+            <span th:text="${ticket.get().description}">Descrizione del ticket</span>
+        </p>
+        <p>
+            <strong>Data:</strong>
+            <time th:text="${#temporals.format(ticket.get().date, 'dd MMMM yyyy HH:mm')}">
+                Data del ticket
+            </time>
+        </p>
+        <p>
+            <strong>Stato:</strong>
+            <span th:class="${ticket.get().status.name().toLowerCase()}"
+                  th:text="${ticket.get().status}">Stato del ticket</span>
+        </p>
+        <p>
+            <strong>Utente:</strong>
+            <em th:text="${ticket.get().user.name + ' ' + ticket.get().user.surname + ' (' + ticket.get().user.username + ')'}">Nome Cognome (username)</em>
+        </p>
+    </article>
+</main>
+
+<footer>
+    <small>&copy; 2024 Ticket Server. Tutti i diritti riservati.</small>
+</footer>
+</body>
+</html>

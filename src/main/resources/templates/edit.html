@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Ticket</title>
+    <link rel="stylesheet" th:href="@{/css/editStyle.css}">
+</head>
+<body>
+<header>
+    <img th:src="@{/images/ticket-img.png}" height="100" alt="Ticket Logo">
+    <h1>Edit Ticket</h1>
+</header>
+<nav>
+    <ul style="list-style-type: none; padding: 0; display: flex; gap: 15px;">
+        <li><a th:href="@{/tickets}">Home page</a></li>
+    </ul>
+</nav>
+<main>
+    <section>
+        <h2 th:text="'Edit Ticket #' + ${ticket.id}">Edit Ticket</h2>
+        <form th:action="@{/tickets/{id}/edit(id=${ticket.id})}" method="POST">
+            <div class="form-group">
+                <label for="title">Titolo</label>
+                <input type="text" id="title" name="title" th:value="${ticket.title}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="type">Tipo Ticket</label>
+                <select id="type" name="type" required>
+                    <option th:each="type : ${ticketTypes}"
+                            th:value="${type}"
+                            th:text="${type.displayName}"
+                            th:selected="${ticket.type == type}">
+                    </option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="username">Utente</label>
+                <select id="username" name="username" required>
+                    <option th:each="user : ${users}"
+                            th:value="${user.username}"
+                            th:text="${user.name + ' ' + user.surname + ' (' + user.username + ')'}"
+                            th:selected="${ticket.user.username == user.username}">
+                    </option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="status">Stato</label>
+                <select id="status" name="status" required>
+                    <option th:each="status : ${statusTypes}"
+                            th:value="${status}"
+                            th:text="${status}"
+                            th:selected="${ticket.status == status}">
+                    </option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Descrizione</label>
+                <textarea id="description" name="description" required th:text="${ticket.description}"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Data Creazione</label>
+                <input type="text" th:value="${#temporals.format(ticket.date, 'dd/MM/yyyy HH:mm')}" readonly class="readonly-input">
+            </div>
+
+            <div class="button-group">
+                <button type="submit">Salva Modifiche</button>
+                <a th:href="@{/tickets}" class="cancel-button">Annulla</a>
+            </div>
+        </form>
+    </section>
+</main>
+
+<footer>
+    <small>&copy; 2024 Ticket Server. Tutti i diritti riservati.</small>
+</footer>
+
+</body>
+</html>

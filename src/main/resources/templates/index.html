@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Tickets</title>
+    <link rel="stylesheet" th:href="@{/CSS/indexStyle.css}">
+
+
+</head>
+<body>
+<header>
+    <img th:src="@{/images/ticket-img.png}" alt="Logo">
+    <h1>Ticket Server</h1>
+</header>
+<nav>
+    <ul>
+        <li><a th:href="@{/tickets/new}">Create page</a></li>
+    </ul>
+</nav>
+<main>
+    <section id="open_tickets">
+        <h2>Ticket Aperti</h2>
+        <article  th:each="ticket : ${tickets}"  th:if="${ticket.status.name() == 'OPEN'}">
+            <h3 th:text="${ticket.title}"></h3>
+            <p th:text="${ticket.description}"></p>
+            <p>Data:
+                <time th:text="${#temporals.format(ticket.date, 'dd/MM/yyyy HH:mm')}"></time>
+            </p>
+            <p>Stato: <strong th:text="${ticket.status}"></strong></p>
+            <p>Utente: <em th:text="${ticket.user != null ? ticket.user.username : 'Nessun utente'}"></em></p>
+        </article>
+    </section>
+
+    <section id="closed_tickets">
+        <h2>Ticket Chiusi</h2>
+
+        <article  th:each="ticket : ${tickets}"  th:if="${ticket.status.name() == 'CLOSED'}">
+            <h3 th:text="${ticket.title}"></h3>
+            <p th:text="${ticket.description}"></p>
+            <p>Data:
+                <time th:text="${#temporals.format(ticket.date, 'dd/MM/yyyy HH:mm')}"></time>
+            </p>
+            <p>Stato: <strong th:text="${ticket.status}"></strong></p>
+            <p>Utente: <em th:text="${ticket.user != null ? ticket.user.username : 'Nessun utente'}"></em></p>
+        </article>
+    </section>
+
+    <section id="processing_tickets">
+        <h2>Ticket In Lavorazione</h2>
+        <article  th:each="ticket : ${tickets}"  th:if="${ticket.status.name() == 'IN_PROGRESS'}">
+            <h3 th:text="${ticket.title}"></h3>
+            <p th:text="${ticket.description}"></p>
+            <p>Data:
+                <time th:text="${#temporals.format(ticket.date, 'dd/MM/yyyy HH:mm')}"></time>
+            </p>
+            <p>Stato: <strong th:text="${ticket.status}"></strong></p>
+            <p>Utente: <em th:text="${ticket.user != null ? ticket.user.username : 'Nessun utente'}"></em></p>
+        </article>
+    </section>
+
+    <aside>
+        <h2>Sidebar</h2>
+    </aside>
+
+</main>
+<footer>
+    <small>&copy; 2024 Ticket Server. Tutti i diritti riservati.</small>
+</footer>
+</body>
+</html>
