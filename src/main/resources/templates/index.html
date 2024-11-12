@@ -28,6 +28,7 @@
             </p>
             <p>Stato: <strong th:text="${ticket.status}"></strong></p>
             <p>Utente: <em th:text="${ticket.user != null ? ticket.user.username : 'Nessun utente'}"></em></p>
+            <button id="link" th:href="@{/tickets/{id}(id=${ticket.id})}">Info</button>
         </article>
     </section>
 
@@ -42,6 +43,7 @@
             </p>
             <p>Stato: <strong th:text="${ticket.status}"></strong></p>
             <p>Utente: <em th:text="${ticket.user != null ? ticket.user.username : 'Nessun utente'}"></em></p>
+            <button th:href="@{/tickets/{id}(id=${ticket.id})}">Info</button>
         </article>
     </section>
 
@@ -55,6 +57,7 @@
             </p>
             <p>Stato: <strong th:text="${ticket.status}"></strong></p>
             <p>Utente: <em th:text="${ticket.user != null ? ticket.user.username : 'Nessun utente'}"></em></p>
+            <button th:href="@{/tickets/{id}(id=${ticket.id})}">Info</button>
         </article>
     </section>
 
