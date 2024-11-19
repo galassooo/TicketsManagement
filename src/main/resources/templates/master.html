@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:insert="Tickets">Ticket Server</title>
+</head>
+<body>
+<header th:fragment="header">
+    <img th:src="@{/images/ticket-img.png}" alt="Logo">
+    <h1>Ticket Server</h1>
+</header>
+
+<footer th:fragment="footer">
+    <small>&copy; 2024 Ticket Server. Tutti i diritti riservati.</small>
+</footer>
+</body>
+</html>

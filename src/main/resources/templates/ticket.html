@@ -6,12 +6,10 @@
     <link rel="stylesheet" th:href="@{/css/ticketStyle.css}">
 </head>
 <body>
-<header>
-    <img th:src="@{/images/ticket-img.png}" height="100" alt="Ticket Logo">
-    <h1>Ticket Server</h1>
-</header>
+<div th:insert="~{master::header}"></div>
 <nav>
     <ul style="list-style-type: none; padding: 0; display: flex; gap: 15px;">
+        <li><a th:href="@{/tickets}">Home page</a></li>
         <li><a th:href="@{/tickets/{id}/delete(id=${ticket.get().id})}">Delete page</a></li>
         <li><a th:href="@{/tickets/{id}/edit(id=${ticket.get().id})}">Edit page</a></li>
     </ul>
@@ -42,14 +40,29 @@
                   th:text="${ticket.get().status}">Stato del ticket</span>
         </p>
         <p>
+            <strong>Tipo:</strong>
+            <span th:class="${ticket.get().type.name().toLowerCase()}"
+                  th:text="${ticket.get().type}">Tipo del ticket</span>
+        </p>
+        <p>
             <strong>Utente:</strong>
-            <em th:text="${ticket.get().user.name + ' ' + ticket.get().user.surname + ' (' + ticket.get().user.username + ')'}">Nome Cognome (username)</em>
+            <em th:text="${ticket.get().user.name + ' ' + ticket.get().user.surname + ' (' + ticket.get().user.username + ')'}">Nome
+                Cognome (username)</em>
+        </p>
+
+        <p>
+            <strong>Attachment:</strong>
+            <a th:if="${ticket.get().attachment != null}"
+               th:href="@{/tickets/{id}/{file}(id=${ticket.get().id}, file=${ticket.get().getAttachment().getName()})}"
+               th:text="${ticket.get().getAttachment().getName()}">
+            </a>
+            <span th:if="${ticket.get().attachment == null}"
+                  th:text="'Nessun documento trovato'">
+            </span>
         </p>
     </article>
 </main>
 
-<footer>
-    <small>&copy; 2024 Ticket Server. Tutti i diritti riservati.</small>
-</footer>
+<div th:insert="~{master::footer}"></div>
 </body>
 </html>

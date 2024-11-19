@@ -6,10 +6,7 @@
     <link rel="stylesheet" th:href="@{/css/editStyle.css}">
 </head>
 <body>
-<header>
-    <img th:src="@{/images/ticket-img.png}" height="100" alt="Ticket Logo">
-    <h1>Edit Ticket</h1>
-</header>
+<div th:insert="~{master::header}"></div>
 <nav>
     <ul style="list-style-type: none; padding: 0; display: flex; gap: 15px;">
         <li><a th:href="@{/tickets}">Home page</a></li>
@@ -18,7 +15,7 @@
 <main>
     <section>
         <h2 th:text="'Edit Ticket #' + ${ticket.id}">Edit Ticket</h2>
-        <form th:action="@{/tickets/{id}/edit(id=${ticket.id})}" method="POST">
+        <form th:action="@{/tickets/{id}/edit(id=${ticket.id})}" method="POST" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="title">Titolo</label>
                 <input type="text" id="title" name="title" th:value="${ticket.title}" required>
@@ -66,6 +63,15 @@
                 <label>Data Creazione</label>
                 <input type="text" th:value="${#temporals.format(ticket.date, 'dd/MM/yyyy HH:mm')}" readonly class="readonly-input">
             </div>
+            <div class="file-att">
+                <label >Modifica allegato</label>
+                <input id="file" type="file" name="file">
+
+                <p th:if="${ticket.attachment != null}"
+                   th:text="'Allegato attuale: ' + ${ticket.attachment.name}"
+                   style="margin-top: 20px; color: #ccc;">
+                </p>
+            </div>
 
             <div class="button-group">
                 <button type="submit">Salva Modifiche</button>
@@ -75,9 +81,7 @@
     </section>
 </main>
 
-<footer>
-    <small>&copy; 2024 Ticket Server. Tutti i diritti riservati.</small>
-</footer>
+<div th:insert="~{master::footer}"></div>
 
 </body>
 </html>

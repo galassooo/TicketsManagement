@@ -1,9 +1,6 @@
 package ch.supsi.ticket.service;
 
-import ch.supsi.ticket.model.Status;
-import ch.supsi.ticket.model.Ticket;
-import ch.supsi.ticket.model.TicketDTO;
-import ch.supsi.ticket.model.User;
+import ch.supsi.ticket.model.*;
 import ch.supsi.ticket.repository.TicketRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.sql.init.SqlInitializationAutoConfiguration;
@@ -19,8 +16,9 @@ public class TicketService {
 
     @Autowired
     private UserService userService;
+
     @Autowired
-    private SqlInitializationAutoConfiguration sqlInitializationAutoConfiguration;
+    private AttachmentService attachmentService;
 
     public Optional<Ticket> getTicket(Long id) {
         return ticketRepository.findById(id);
@@ -39,15 +37,16 @@ public class TicketService {
         System.out.println("username: "+ticketDTO.getUsername());
         Optional<User> user = userService.getUser(ticketDTO.getUsername());
 
+        User usr;
         if(user.isPresent()) {
-            User usr = user.get();
-            Ticket ticket = new Ticket(usr, ticketDTO.getDescription(), ticketDTO.getTitle(), ticketDTO.getType());
-            return ticketRepository.save(ticket);
+            usr = user.get();
         }else{
-            User usr = new User(ticketDTO.getUsername(), "Not available", "Not available");
+           usr = new User(ticketDTO.getUsername(), "Not available", "Not available");
             userService.createUser(usr);
-            return ticketRepository.save(new Ticket(usr, ticketDTO.getDescription(), ticketDTO.getTitle(), ticketDTO.getType() ));
         }
+
+        attachmentService.save(ticketDTO.getAttachment());
+        return ticketRepository.save(new Ticket(usr, ticketDTO.getDescription(), ticketDTO.getTitle(), ticketDTO.getType(), ticketDTO.getAttachment()));
     }
 
     public Ticket updateTicket(Long id, TicketDTO ticketDto) {
@@ -59,6 +58,11 @@ public class TicketService {
             tck.setDescription(ticketDto.getDescription());
             tck.setStatus(ticketDto.getStatus());
             tck.setType(ticketDto.getType());
+
+            if(ticketDto.getAttachment() != null) {
+                attachmentService.save(ticketDto.getAttachment());
+                tck.setAttachment(ticketDto.getAttachment());
+            }
 
             if(ticketDto.getUsername() != null && !ticketDto.getUsername().equals(tck.getUser().getUsername())) {
                 Optional<User> newUser = userService.getUser(ticketDto.getUsername());

@@ -1,5 +1,8 @@
 package ch.supsi.ticket.model;
 
+import lombok.Getter;
+
+@Getter
 public enum TicketType {
     BUG("Bug"),
     FEATURE_REQUEST("Richiesta Funzionalità"),
@@ -10,9 +13,5 @@ public enum TicketType {
 
     TicketType(String displayName) {
         this.displayName = displayName;
-    }
-
-    public String getDisplayName() {
-        return displayName;
     }
 }

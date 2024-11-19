@@ -26,21 +26,27 @@ public class Ticket {
     private String title;
 
     @Enumerated(EnumType.STRING)
+    @Column
     private Status status;
 
     @Enumerated(EnumType.STRING)
-    private TicketType type;  // Aggiunto il tipo di ticket
+    @Column
+    private TicketType type;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @DateTimeFormat(pattern = "dd/MM/yyyy HH:mm")  // Corretto il pattern della data
+    @DateTimeFormat(pattern = "dd/MM/yyyy HH:mm")
     private LocalDateTime date;
 
-    public Ticket(User user, String description, String title, TicketType type) {
+    @OneToOne
+    private Attachment attachment;
+
+    public Ticket(User user, String description, String title, TicketType type, Attachment attachment) {
         this.user = user;
         this.description = description;
         this.title = title;
         this.status = Status.OPEN;
         this.type = type;
         this.date = LocalDateTime.now();
+        this.attachment = attachment;
     }
 }

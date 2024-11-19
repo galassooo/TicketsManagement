@@ -11,7 +11,8 @@ import lombok.NoArgsConstructor;
 public class TicketDTO {
     private String title;
     private String description;
-    private String username;  // questo diventerà user_username nel form
-    private TicketType type;  // Aggiunto il tipo
+    private String username;
+    private TicketType type;
     private Status status;
+    private Attachment attachment;
 }

@@ -193,7 +193,7 @@ button[type="submit"] {
     font-size: 16px;
     font-weight: bold;
     transition: all 0.3s ease;
-    width: 100%;
+    width: 50%;
 }
 
 button[type="submit"]:hover {
@@ -215,12 +215,17 @@ button[type="submit"]:active {
 .cancel-button {
     background-color: #444;
     color: #fff;
-    padding: 15px 30px;
-    border-radius: 5px;
-    text-decoration: none;
+    padding: 15px;
+    margin-top: 30px;
     text-align: center;
-    transition: background-color 0.3s ease;
-    flex: 1;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    width: 50%;
+    text-decoration: none;
 }
 
 .cancel-button:hover {
@@ -233,6 +238,33 @@ button[type="submit"]:active {
     cursor: not-allowed;
     opacity: 0.7;
 }
+
+input[type="file"]::file-selector-button  {
+    background-color: #333;
+    color: #FFF;
+    width: 100px;
+    height: 30px;
+    margin-top: 10px;
+    font-size: 15px;
+    border-color: #c08bbd;
+    border-width: 1px;
+}
+
+input[type="file"]{
+    width: 400px;
+}
+
+input[type="file"]::first-line  {
+    font-size: 15px;
+    width: 100px;
+    color: #9c9c9c;
+    padding-left: 100px;
+}
+
+input[type="file"]::file-selector-button:hover  {
+    cursor: hand;
+}
+
 
 /* Media query */
 @media (max-width: 768px) {
