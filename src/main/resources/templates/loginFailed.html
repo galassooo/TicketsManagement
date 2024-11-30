@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <meta charset="UTF-8">
+  <title>Login Failed</title>
+  <link rel="stylesheet" th:href="@{/CSS/loginFailedStyle.css}">
+</head>
+<body>
+<div th:insert="~{master::header}"></div>
+
+<main>
+  <div class="login-failed-container">
+    <h2>Login Failed</h2>
+    <div class="error-box">
+      <p>Invalid username or password. Please try again.</p>
+      <a href="/login" class="retry-button">Back to Login</a>
+    </div>
+    <a href="/" class="register-link">Not registered yet? Sign up here</a>
+  </div>
+</main>
+
+<div th:insert="~{master::footer}"></div>
+</body>
+</html>

@@ -1,6 +1,7 @@
 package ch.supsi.ticket.controller;
 
 
+
 import ch.supsi.ticket.model.Ticket;
 import ch.supsi.ticket.model.TicketDTO;
 import ch.supsi.ticket.service.TicketService;
@@ -32,8 +33,7 @@ public class TicketController {
 
     @PostMapping
     private ResponseEntity<Ticket> createTicket(@RequestBody TicketDTO ticketDTO) throws URISyntaxException {
-        Ticket ticket = ticketService.createTicket(ticketDTO);
-        return ResponseEntity.created(new URI("/tickets/" + ticket.getId())).body(ticket);
+        return null;
     }
 
     @PutMapping("{id}")

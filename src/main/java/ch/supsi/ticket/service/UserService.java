@@ -1,10 +1,12 @@
 package ch.supsi.ticket.service;
 
-import ch.supsi.ticket.model.Ticket;
 import ch.supsi.ticket.model.User;
-import ch.supsi.ticket.repository.TicketRepository;
+import ch.supsi.ticket.model.UserRole;
 import ch.supsi.ticket.repository.UserRepository;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +18,32 @@ public class UserService {
 
     @Autowired
     private UserRepository repo;
+
+    BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
+
+    public User registerNewUser(String username, String name, String surname, String password) {
+        if (repo.existsById(username)) {
+            throw new RuntimeException("Username already exists");
+        }
+
+        User newUser = new User(
+                username,
+                name,
+                surname,
+                encoder.encode(password),
+                UserRole.ROLE_USER
+        );
+
+        return repo.save(newUser);
+    }
+
+    @PostConstruct
+    private void init() {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        User use = new User("_admin", "name", "surname", encoder.encode("password"), UserRole.ROLE_ADMIN);
+        repo.save(use);
+    }
 
     public Optional<User> getUser(String id) {
         return repo.findById(id);
@@ -31,9 +59,9 @@ public class UserService {
         repo.save(user);
     }
 
-    public boolean updateUser(String id, User user ) {
+    public boolean updateUser(String id, User user) {
         Optional<User> oldUder = repo.findById(id);
-        if(oldUder.isPresent()) {
+        if (oldUder.isPresent()) {
             User usr = oldUder.get();
             usr.setName(user.getName());
             usr.setSurname(user.getSurname());
@@ -45,11 +73,10 @@ public class UserService {
     }
 
     public boolean deleteUser(String id) {
-        if(repo.existsById(id)) {
+        if (repo.existsById(id)) {
             repo.deleteById(id);
             return true;
         }
         return false;
     }
-
 }

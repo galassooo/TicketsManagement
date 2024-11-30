@@ -10,6 +10,51 @@ body {
     min-height: 100vh;
 }
 
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #222;
+    color: #fff;
+    padding: 20px;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.username {
+    color: #d4a5d5;
+    margin-right: 15px;
+}
+
+.logout-form {
+    display: inline;
+}
+
+.logout-btn, .login-btn {
+    background-color: #d4a5d5;
+    color: #fff;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.logout-btn:hover, .login-btn:hover {
+    background-color: #b383b7;
+}
 
 header {
     background-color: #222;

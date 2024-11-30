@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+
 @Service
 public class TicketService {
 
@@ -30,23 +31,15 @@ public class TicketService {
     }
 
 
-    public Ticket createTicket(TicketDTO ticketDTO) {
+    public Ticket createTicket(TicketDTO ticketDTO, User user) {
         System.out.println("description: "+ticketDTO.getDescription());
         System.out.println("title: "+ticketDTO.getTitle());
         System.out.println("Type: "+ticketDTO.getType());
         System.out.println("username: "+ticketDTO.getUsername());
-        Optional<User> user = userService.getUser(ticketDTO.getUsername());
 
-        User usr;
-        if(user.isPresent()) {
-            usr = user.get();
-        }else{
-           usr = new User(ticketDTO.getUsername(), "Not available", "Not available");
-            userService.createUser(usr);
-        }
 
         attachmentService.save(ticketDTO.getAttachment());
-        return ticketRepository.save(new Ticket(usr, ticketDTO.getDescription(), ticketDTO.getTitle(), ticketDTO.getType(), ticketDTO.getAttachment()));
+        return ticketRepository.save(new Ticket(user ,ticketDTO.getDescription(), ticketDTO.getTitle(), ticketDTO.getType(), ticketDTO.getAttachment()));
     }
 
     public Ticket updateTicket(Long id, TicketDTO ticketDto) {

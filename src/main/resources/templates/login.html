@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" th:href="@{/CSS/loginStyle.css}">
+</head>
+<body>
+<div th:insert="~{master::header}"></div>
+<nav>
+    <ul style="list-style-type: none; padding: 0; display: flex; gap: 15px;">
+        <li><a th:href="@{/tickets}">Home page</a></li>
+    </ul>
+</nav>
+<main>
+    <div class="login-container">
+        <h2>Welcome back!</h2>
+        <form th:action="@{/tickets/login}" method="post">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" placeholder="name.surname">
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="password">
+            </div>
+            <input type="submit" value="Submit">
+        </form>
+        <a href="/tickets/register" class="register-link">Register</a>
+    </div>
+</main>
+
+<div th:insert="~{master::footer}"></div>
+</body>
+</html>

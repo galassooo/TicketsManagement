@@ -1,13 +1,27 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head>
     <meta charset="UTF-8">
     <title th:insert="Tickets">Ticket Server</title>
 </head>
 <body>
 <header th:fragment="header">
-    <img th:src="@{/images/ticket-img.png}" alt="Logo">
-    <h1>Ticket Server</h1>
+    <div class="header-left">
+        <img th:src="@{/images/ticket-img.png}" alt="Logo">
+        <h1>Ticket Server</h1>
+    </div>
+    <div class="header-right">
+        <div sec:authorize="isAuthenticated()">
+            <span class="username" th:text="${#authentication.name}"></span>
+            <form th:action="@{/tickets/logout}" method="post" class="logout-form">
+                <button type="submit" class="logout-btn">Logout</button>
+            </form>
+        </div>
+        <div sec:authorize="!isAuthenticated()">
+            <a href="/tickets/login" class="login-btn">Login</a>
+        </div>
+    </div>
 </header>
 
 <footer th:fragment="footer">

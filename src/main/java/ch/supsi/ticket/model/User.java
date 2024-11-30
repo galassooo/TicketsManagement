@@ -1,13 +1,16 @@
 package ch.supsi.ticket.model;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@NoArgsConstructor @AllArgsConstructor @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
 public class User {
 
     @Id
@@ -16,5 +19,10 @@ public class User {
     private String name;
 
     private String surname;
+
+    private String password;
+    @Enumerated
+    private UserRole role;
+
 
 }
