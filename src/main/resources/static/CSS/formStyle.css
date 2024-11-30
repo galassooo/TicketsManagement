@@ -1,79 +1,3 @@
-/* Stili generali */
-body {
-    font-family: Arial, sans-serif;
-    background-color: #000000;
-    color: #333;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-}
-
-header {
-    background-color: #222;
-    color: #fff;
-    padding: 20px;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #222;
-    color: #fff;
-    padding: 20px;
-}
-
-.header-left {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.header-right {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.username {
-    color: #d4a5d5;
-    margin-right: 15px;
-}
-
-.logout-form {
-    display: inline;
-}
-
-.logout-btn, .login-btn {
-    background-color: #d4a5d5;
-    color: #fff;
-    border: none;
-    padding: 8px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    text-decoration: none;
-    font-size: 14px;
-    transition: background-color 0.3s ease;
-}
-
-.logout-btn:hover, .login-btn:hover {
-    background-color: #b383b7;
-}
-header img {
-    max-width: 30px;
-    height: auto;
-}
-
-header h1 {
-    font-size: 24px;
-    margin: 0;
-    color: #ffffff;
-}
-
 nav {
     background-color: #333;
     padding: 10px 0;
@@ -102,17 +26,8 @@ nav ul li a:hover {
 main {
     display: flex;
     justify-content: center;
-    padding: 40px 20px;
+    padding: 20px;
     flex-grow: 1;
-}
-
-footer {
-    background-color: #222;
-    color: #fff;
-    text-align: center;
-    padding: 10px 0;
-    font-size: 14px;
-    border-top: 2px solid #d4a5d5;
 }
 
 /* Stili per la sezione */
@@ -136,7 +51,7 @@ section h2 {
 }
 
 /* Formattazione del form */
-form {
+form[id="form"] {
     display: flex;
     flex-direction: column;
     gap: 25px;

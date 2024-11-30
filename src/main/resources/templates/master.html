@@ -14,12 +14,12 @@
     <div class="header-right">
         <div sec:authorize="isAuthenticated()">
             <span class="username" th:text="${#authentication.name}"></span>
-            <form th:action="@{/tickets/logout}" method="post" class="logout-form">
-                <button type="submit" class="logout-btn">Logout</button>
+            <form id="formHeader" th:action="@{/tickets/logout}" method="post" class="logoutH-form">
+                <button type="submit" class="logoutH-btn">Logout</button>
             </form>
         </div>
         <div sec:authorize="!isAuthenticated()">
-            <a href="/tickets/login" class="login-btn">Login</a>
+            <a href="/tickets/login" class="loginH-btn">Login</a>
         </div>
     </div>
 </header>

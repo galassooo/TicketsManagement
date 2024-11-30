@@ -48,18 +48,23 @@ public class TicketCtrl {
 
     @GetMapping("new")
     public String showTicketForm(Model model) {
-        // Assumendo che tu abbia un enum TicketType
         model.addAttribute("ticketTypes", TicketType.values());
-        // Prendi tutti gli utenti dal service
-        model.addAttribute("users", userService.getUsers());
         return "form";
     }
 
     @PostMapping("new")
     public String createTicket(@ModelAttribute TicketDTO ticketDTO, @RequestParam("file") MultipartFile file) throws IOException {
-        org.springframework.security.core.userdetails.User userTmp = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        // Prendiamo l'utente direttamente dal contesto di sicurezza
+        org.springframework.security.core.userdetails.User userTmp =
+                (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Optional<User> usr = userService.getUser(userTmp.getUsername());
 
+        validateFile(ticketDTO, file);
+        ticketService.createTicket(ticketDTO, usr.get());
+        return "redirect:/tickets";
+    }
+
+    private void validateFile(@ModelAttribute TicketDTO ticketDTO, @RequestParam("file") MultipartFile file) throws IOException {
         if (file != null && !file.isEmpty()) {
             Attachment attachment = new Attachment();
             attachment.setSize(file.getSize());
@@ -67,8 +72,6 @@ public class TicketCtrl {
             attachment.setData(file.getBytes());
             ticketDTO.setAttachment(attachment);
         }
-        ticketService.createTicket(ticketDTO, usr.get());
-        return "redirect:/tickets";
     }
 
     @GetMapping("/{id}/edit")
@@ -97,13 +100,7 @@ public class TicketCtrl {
 
     @PostMapping("/{id}/edit")
     public String updateTicket(@PathVariable Long id, @ModelAttribute TicketDTO ticketDTO, @RequestParam("file") MultipartFile file) throws IOException {
-        if (file != null && !file.isEmpty()) {
-            Attachment attachment = new Attachment();
-            attachment.setSize(file.getSize());
-            attachment.setName(file.getOriginalFilename());
-            attachment.setData(file.getBytes());
-            ticketDTO.setAttachment(attachment);
-        }
+        validateFile(ticketDTO, file);
         ticketService.updateTicket(id, ticketDTO);
         return "redirect:/tickets/{id}";
     }

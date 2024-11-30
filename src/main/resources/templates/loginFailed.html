@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>Login Failed</title>
   <link rel="stylesheet" th:href="@{/CSS/loginFailedStyle.css}">
+  <link rel="stylesheet" th:href="@{/CSS/master.css}">
 </head>
 <body>
 <div th:insert="~{master::header}"></div>
@@ -13,9 +14,9 @@
     <h2>Login Failed</h2>
     <div class="error-box">
       <p>Invalid username or password. Please try again.</p>
-      <a href="/login" class="retry-button">Back to Login</a>
+      <a href="/tickets/login" class="retry-button">Back to Login</a>
     </div>
-    <a href="/" class="register-link">Not registered yet? Sign up here</a>
+    <a href="/tickets/" class="register-link">Not registered yet? Sign up here</a>
   </div>
 </main>
 
