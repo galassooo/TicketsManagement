@@ -135,13 +135,22 @@ form input[type="submit"]:hover {
 
 /* Error message styling */
 .error-message {
-    color: #ff6b6b;
-    text-align: center;
-    margin-bottom: 15px;
-    padding: 10px;
-    background-color: rgba(255, 107, 107, 0.1);
-    border-radius: 5px;
-    border: 1px solid #ff6b6b;
+    color: #ff6b6b !important;
+    text-align: left  !important;
+    padding: 8px !important;
+    background-color: rgba(80, 38, 38, 0.1) !important;
+    border-radius: 5px !important;
+    border: 1px solid #ff6b6b !important;
+}
+
+/* Valid message styling */
+.valid-message {
+    color: #70de74 !important;
+    text-align: left  !important;
+    padding: 8px !important;
+    background-color: rgba(18, 37, 19, 0.38) !important;
+    border-radius: 5px !important;
+    border: 1px solid #44b049 !important;
 }
 
 /* Footer styling */

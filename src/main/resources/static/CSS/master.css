@@ -51,6 +51,10 @@ header {
     /* Reset completo per bottoni/link */
     display: inline-block !important;
     position: static !important;
+    outline: none !important;
+    text-transform: none !important;
+    letter-spacing: normal !important;
+    word-spacing: normal !important;
     background-color: #d4a5d5 !important;
     color: #fff !important;
     border: 0 none !important;
@@ -68,10 +72,6 @@ header {
     white-space: nowrap !important;
     transition: background-color 0.3s ease !important;
     box-shadow: none !important;
-    outline: none !important;
-    text-transform: none !important;
-    letter-spacing: normal !important;
-    word-spacing: normal !important;
     text-indent: 0 !important;
     text-shadow: none !important;
     min-width: auto !important;

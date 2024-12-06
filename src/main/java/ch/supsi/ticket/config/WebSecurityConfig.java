@@ -30,9 +30,10 @@ public class WebSecurityConfig {
                         .logoutSuccessUrl("/tickets/")
                         .permitAll())
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers( "/tickets", "/tickets/{id:[0-9]+}", "/tickets/register").permitAll()
+                        .requestMatchers("/tickets/new").authenticated()
+                        .requestMatchers( "/tickets", "/tickets/*", "/tickets/register").permitAll()
                         .requestMatchers("/tickets/login").permitAll()
-                        .requestMatchers("/CSS/*", "/CSS/ticket.html", "/images/**", "/aside.html").permitAll() //risorse statiche
+                        .requestMatchers("/CSS/*", "/js/*","/CSS/ticket.html", "/images/**", "/aside.html").permitAll() //risorse statiche
                         .requestMatchers("/tickets/*/edit").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )

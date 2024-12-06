@@ -15,7 +15,7 @@
         <div sec:authorize="isAuthenticated()">
             <span class="username" th:text="${#authentication.name}"></span>
             <form id="formHeader" th:action="@{/tickets/logout}" method="post" class="logoutH-form">
-                <button type="submit" class="logoutH-btn">Logout</button>
+                <button id="BOTTONE" type="submit" class="logoutH-btn">Logout</button>
             </form>
         </div>
         <div sec:authorize="!isAuthenticated()">
