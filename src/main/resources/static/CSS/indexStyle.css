@@ -35,9 +35,9 @@ main {
 aside {
     background-color: #1e1e1e;
     color: #eee;
-    padding: 15px;
     border-left: 3px solid #d4a5d5;
     border-radius: 8px;
+    width: 300px;
     grid-row: 1 / span 3;
     grid-column: 2;
 }
@@ -107,9 +107,7 @@ article a:hover {
     transform: translateY(-1px);
 }
 
-iframe{
-    border: none;
-}
+
 @media (max-width: 768px) {
     main {
         grid-template-columns: 1fr;

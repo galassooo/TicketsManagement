@@ -34,7 +34,9 @@ public class WebSecurityConfig {
                         .requestMatchers( "/tickets", "/tickets/*", "/tickets/register").permitAll()
                         .requestMatchers("/tickets/login").permitAll()
                         .requestMatchers("/CSS/*", "/js/*","/CSS/ticket.html", "/images/**", "/aside.html").permitAll() //risorse statiche
+                        .requestMatchers("/webjars/*").permitAll()
                         .requestMatchers("/tickets/*/edit").hasRole("ADMIN")
+                        .requestMatchers("/tickets/search").permitAll()
                         .anyRequest().authenticated()
                 )
                 .build();

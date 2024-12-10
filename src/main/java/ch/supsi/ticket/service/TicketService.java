@@ -7,6 +7,8 @@ import org.springframework.boot.autoconfigure.sql.init.SqlInitializationAutoConf
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -79,4 +81,13 @@ public class TicketService {
         return false;
     }
 
+    public List<Ticket> getAllTicketsWithString(String q){
+        return ticketRepository.findAll().stream()
+                .filter(ticket -> (ticket.getDescription() + " " +
+                        ticket.getTitle() + " " +
+                        ticket.getUser().getUsername())
+                        .toLowerCase()
+                        .contains(q.toLowerCase()))
+                .collect(Collectors.toList());
+    }
 }

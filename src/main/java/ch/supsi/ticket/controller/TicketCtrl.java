@@ -1,11 +1,7 @@
 package ch.supsi.ticket.controller;
 
-import ch.supsi.ticket.model.TicketDTO;
-import ch.supsi.ticket.model.Status;
-import ch.supsi.ticket.model.Attachment;
-import ch.supsi.ticket.model.TicketType;
+import ch.supsi.ticket.model.*;
 
-import ch.supsi.ticket.model.User;
 import ch.supsi.ticket.service.TicketService;
 import ch.supsi.ticket.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -147,6 +144,15 @@ public class TicketCtrl {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
             return "redirect:/tickets/register";
         }
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<Ticket>> searchParam(@RequestParam("q") String query) {
+        List<Ticket> filteredTickets = ticketService.getAllTicketsWithString(query);
+        if (filteredTickets.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(filteredTickets);
     }
 }
 

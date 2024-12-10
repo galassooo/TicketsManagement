@@ -5,6 +5,7 @@
     <title>Tickets</title>
     <link rel="stylesheet" th:href="@{/CSS/indexStyle.css}">
     <link rel="stylesheet" th:href="@{/CSS/master.css}">
+    <link rel="stylesheet" th:href="@{/CSS/searchBar.css}">
 </head>
 <body>
 <div th:insert="~{master::header}"></div>
@@ -14,58 +15,66 @@
     </ul>
 </nav>
 <main>
-    <section id="open_tickets">
-        <h2>Ticket Aperti</h2>
-        <article th:each="ticket : ${tickets}" th:if="${ticket.status.name() == 'OPEN'}">
-            <h3 th:text="${ticket.title}"></h3>
-            <p th:text="${ticket.description}"></p>
-            <p>Data:
-                <time th:text="${#temporals.format(ticket.date, 'dd/MM/yyyy HH:mm')}"></time>
-            </p>
-            <p>Stato: <strong th:text="${ticket.status}"></strong></p>
-            <p>Tipo: <strong th:text="${ticket.type}"></strong></p>
-            <p>Utente: <em th:text="${ticket.user != null ? ticket.user.username : 'Nessun utente'}"></em></p>
-            <a th:href="@{/tickets/{id}(id=${ticket.id})}" class="btn btn-primary">Info</a>
-        </article>
-    </section>
+    <div id="ticketsContainer">
+        <section id="open_tickets">
+            <h2>Ticket Aperti</h2>
+            <article th:each="ticket : ${tickets}" th:if="${ticket.status.name() == 'OPEN'}">
+                <h3 th:text="${ticket.title}"></h3>
+                <p th:text="${ticket.description}"></p>
+                <p>Data:
+                    <time th:text="${#temporals.format(ticket.date, 'dd/MM/yyyy HH:mm')}"></time>
+                </p>
+                <p>Stato: <strong th:text="${ticket.status}"></strong></p>
+                <p>Tipo: <strong th:text="${ticket.type}"></strong></p>
+                <p>Utente: <em th:text="${ticket.user != null ? ticket.user.username : 'Nessun utente'}"></em></p>
+                <a th:href="@{/tickets/{id}(id=${ticket.id})}" class="btn btn-primary">Info</a>
+            </article>
+        </section>
 
-    <section id="closed_tickets">
-        <h2>Ticket Chiusi</h2>
+        <section id="closed_tickets">
+            <h2>Ticket Chiusi</h2>
 
-        <article th:each="ticket : ${tickets}" th:if="${ticket.status.name() == 'CLOSED'}">
-            <h3 th:text="${ticket.title}"></h3>
-            <p th:text="${ticket.description}"></p>
-            <p>Data:
-                <time th:text="${#temporals.format(ticket.date, 'dd/MM/yyyy HH:mm')}"></time>
-            </p>
-            <p>Stato: <strong th:text="${ticket.status}"></strong></p>
-            <p>Tipo: <strong th:text="${ticket.type}"></strong></p>
-            <p>Utente: <em th:text="${ticket.user != null ? ticket.user.username : 'Nessun utente'}"></em></p>
-            <a th:href="@{/tickets/{id}(id=${ticket.id})}" class="btn btn-primary">Info</a>
-        </article>
-    </section>
+            <article th:each="ticket : ${tickets}" th:if="${ticket.status.name() == 'CLOSED'}">
+                <h3 th:text="${ticket.title}"></h3>
+                <p th:text="${ticket.description}"></p>
+                <p>Data:
+                    <time th:text="${#temporals.format(ticket.date, 'dd/MM/yyyy HH:mm')}"></time>
+                </p>
+                <p>Stato: <strong th:text="${ticket.status}"></strong></p>
+                <p>Tipo: <strong th:text="${ticket.type}"></strong></p>
+                <p>Utente: <em th:text="${ticket.user != null ? ticket.user.username : 'Nessun utente'}"></em></p>
+                <a th:href="@{/tickets/{id}(id=${ticket.id})}" class="btn btn-primary">Info</a>
+            </article>
+        </section>
 
-    <section id="processing_tickets">
-        <h2>Ticket In Lavorazione</h2>
-        <article th:each="ticket : ${tickets}" th:if="${ticket.status.name() == 'IN_PROGRESS'}">
-            <h3 th:text="${ticket.title}"></h3>
-            <p th:text="${ticket.description}"></p>
-            <p>Data:
-                <time th:text="${#temporals.format(ticket.date, 'dd/MM/yyyy HH:mm')}"></time>
-            </p>
-            <p>Stato: <strong th:text="${ticket.status}"></strong></p>
-            <p>Tipo: <strong th:text="${ticket.type}"></strong></p>
-            <p>Utente: <em th:text="${ticket.user != null ? ticket.user.username : 'Nessun utente'}"></em></p>
-            <a th:href="@{/tickets/{id}(id=${ticket.id})}" class="btn btn-primary">Info</a>
-        </article>
-    </section>
-
+        <section id="processing_tickets">
+            <h2>Ticket In Lavorazione</h2>
+            <article th:each="ticket : ${tickets}" th:if="${ticket.status.name() == 'IN_PROGRESS'}">
+                <h3 th:text="${ticket.title}"></h3>
+                <p th:text="${ticket.description}"></p>
+                <p>Data:
+                    <time th:text="${#temporals.format(ticket.date, 'dd/MM/yyyy HH:mm')}"></time>
+                </p>
+                <p>Stato: <strong th:text="${ticket.status}"></strong></p>
+                <p>Tipo: <strong th:text="${ticket.type}"></strong></p>
+                <p>Utente: <em th:text="${ticket.user != null ? ticket.user.username : 'Nessun utente'}"></em></p>
+                <a th:href="@{/tickets/{id}(id=${ticket.id})}" class="btn btn-primary">Info</a>
+            </article>
+        </section>
+    </div>
     <aside>
-        <iframe src="/aside.html"></iframe>
+        <div class="search-container">
+            <form id="searchForm">
+                <input id="searchField" type="text" placeholder="Search.." name="search">
+                <button id="searchButton" type="button"><img id="immagineLente" style="width: 25px; height: 25px;"
+                                                             src="images/lente.png" alt="lente"></img></button>
+            </form>
+        </div>
     </aside>
 
 
 </main>
-    <div th:insert="~{master::footer}"></div>
+<div th:insert="~{master::footer}"></div>
 </body>
+<script th:src="@{/js/search.js}"></script>
 </html>

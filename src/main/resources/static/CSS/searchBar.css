@@ -1,0 +1,51 @@
+form input[type="text"] {
+    width: 190px;
+    height: 20px;
+    padding: 8px;
+    border: 1px solid #444;
+    border-radius: 5px;
+    background-color: #1a1a1a;
+    color: #eee;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+form input[type="text"]::placeholder {
+    color: #fbfbfb;
+}
+
+form input[type="text"]:focus {
+    border-color: #d4a5d5;
+}
+
+form input[type="text"]:hover {
+    background-color: #564857;
+}
+
+button {
+    background-color: transparent;
+    border: none;
+    width: 25px;
+    height: 25px;
+    position: relative;
+    top: 8px; /* Aggiustato per allineare con l'input */
+}
+
+.search-container button {
+    padding: 0;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+
+.search-container{
+    margin: 20px;
+}
+
+.search-container button img {
+    width: 25px; /* Mantiene la dimensione originale */
+    height: 25px;
+}
