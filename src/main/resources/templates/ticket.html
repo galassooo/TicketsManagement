@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title th:text="${ticket.present ? 'Ticket #' + ticket.get().id : 'Ticket non trovato'}">Ticket Details</title>
@@ -35,6 +35,24 @@
                 Data del ticket
             </time>
         </p>
+        <p th:if="${ticket.get().getDue_date() != null}">
+            <strong>Due date:</strong>
+            <time th:text="${#temporals.format(ticket.get().due_date, 'dd MMMM yyyy HH:mm')}">
+                due date
+            </time>
+        </p>
+        <p th:if="${ticket.get().getAssignee() != null}">
+            <strong>Assignee:</strong>
+            <time th:text="${ticket.get().assignee.getUsername()}">
+                assignee
+            </time>
+        </p>
+        <p th:if="${ticket.get().getEstimate() != null}">
+            <strong>Estimate time:</strong>
+            <time th:text="${#temporals.format(ticket.get().estimate, 'HH:mm')}">
+                Estimate time
+            </time>
+        </p>
         <p>
             <strong>Stato:</strong>
             <span th:class="${ticket.get().status.name().toLowerCase()}"
@@ -51,6 +69,11 @@
                 Cognome (username)</em>
         </p>
 
+        <p id="watching">
+            <strong >Watching:</strong>
+            <em th:text="${ticket.get().watchers.size()}">0</em>
+        </p>
+
         <p>
             <strong>Attachment:</strong>
             <a th:if="${ticket.get().attachment != null}"
@@ -61,9 +84,22 @@
                   th:text="'Nessun documento trovato'">
             </span>
         </p>
+        <div id="timeBtn" sec:authorize="isAuthenticated()">
+            <div th:if="${ticket.get().getAssignee() != null && currentUser.getUsername() == ticket.get().assignee.getUsername()}">
+                <a th:href="@{/tickets/{id}/editTime (id=${ticket.get().id})}" id="time-link">Edit spent time</a>
+            </div>
+            <div  th:if="${!currentUser.getTickets().contains(ticket.get())}" id="watchBth">
+                <a th:href="@{/tickets/{id}/watch (id=${ticket.get().id})}" id="watch-link">watch ticket</a>
+            </div>
+
+            <div th:if="${ticket.get().watchers.contains(currentUser)}">
+                <h3>Already watching...</h3>
+            </div>
+        </div>
     </article>
 </main>
 
 <div th:insert="~{master::footer}"></div>
+<script th:src="@{/js/updateWatching.js}"></script>
 </body>
 </html>

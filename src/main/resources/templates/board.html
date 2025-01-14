@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Tickets Board</title>
+    <link rel="stylesheet" th:href="@{/CSS/board.css}">
+    <link rel="stylesheet" th:href="@{/CSS/master.css}">
+</head>
+<body>
+<div th:insert="~{master::header}"></div>
+<nav>
+    <ul>
+        <li><a th:href="@{/tickets}">Home page</a></li>
+    </ul>
+</nav>
+<main>
+    <h2 class="boardTitle">
+        Progress board
+    </h2>
+
+    <div id="grid">
+        <div id="item1">
+            <section id="open_tickets">
+                <h2>Open Tickets</h2>
+                <a id="open-link"  th:each="ticket : ${tickets}" th:if="${ticket.status.name() == 'OPEN'}">
+                    <article th:id="${ticket.id}">
+                    <h3 th:text="${ticket.title}"></h3>
+                    <p>Tipo: <strong th:text="${ticket.type}"></strong></p>
+                    <p>Utente: <em th:text="${ticket.assignee != null ? ticket.assignee.username : 'Nessun utente'}"></em></p>
+                    </article>
+                </a>
+            </section>
+        </div>
+        <div id="item2">
+            <section id="processing_tickets">
+                <h2>In progress Tickets</h2>
+                <a id="progress-link" th:each="ticket : ${tickets}" th:if="${ticket.status.name() == 'IN_PROGRESS'}">
+                    <article th:id="${ticket.id}">
+                    <h3 th:text="${ticket.title}"></h3>
+                    <p>Tipo: <strong th:text="${ticket.type}"></strong></p>
+                    <p>Utente: <em th:text="${ticket.assignee != null ? ticket.assignee.username : 'Nessun utente'}"></em></p>
+                    </article>
+                </a>
+            </section>
+        </div>
+        <div id="item3">
+            <section id="closed tickets">
+                <h2>Closed Tickets</h2>
+                <a id="closed-link" th:each="ticket : ${tickets}" th:if="${ticket.status.name() == 'CLOSED'}">
+                    <article th:id="${ticket.id}">
+                    <h3 th:text="${ticket.title}"></h3>
+                    <p>Tipo: <strong th:text="${ticket.type}"></strong></p>
+                    <p>Utente: <em th:text="${ticket.assignee != null ? ticket.assignee.username : 'Nessun utente'}"></em></p>
+                </article>
+                </a>
+            </section>
+        </div>
+
+        <div id="item4">
+            <section id="InfoBar">
+                <h2>Progress Status</h2>
+                <progress id="progressBar" th:value="${progress}" max="100" th:content="${progress}"> 32% </progress>
+                <p>In Progress: <strong th:text="${allInProgress}"></strong></p>
+                <p>Opened: <strong th:text="${allOpened}"></strong></p>
+            </section>
+        </div>
+    </div>
+
+</main>
+</body>
+<script>
+
+</script>
+<script th:src="@{/js/updateProgress.js}"></script>
+</html>
+

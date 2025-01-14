@@ -17,6 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Controller
 @RequestMapping("/tickets")
@@ -31,8 +32,14 @@ public class TicketCtrl {
     @GetMapping("")
     public String index(Model model) {
         var list = ticketService.getTickets();
+
+        org.springframework.security.core.userdetails.User userTmp =
+                (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Optional<User> usr = userService.getUser(userTmp.getUsername());
+
         model.addAttribute("tickets", list);
         model.addAttribute("status", Status.values());
+        model.addAttribute("currentUser",usr.orElse(null));
         return "index";
     }
 
@@ -40,12 +47,21 @@ public class TicketCtrl {
     public String ticketPage(@PathVariable Long id, Model model) {
         var ticket = ticketService.getTicket(id);
         model.addAttribute("ticket", ticket);
+
+        org.springframework.security.core.userdetails.User userTmp =
+                (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Optional<User> usr = userService.getUser(userTmp.getUsername());
+
+        model.addAttribute("currentUser", usr.get());
+
         return "ticket";
     }
 
     @GetMapping("new")
     public String showTicketForm(Model model) {
         model.addAttribute("ticketTypes", TicketType.values());
+        var utenti = userService.getUsers();
+        model.addAttribute("users",utenti);
         return "form";
     }
 
@@ -56,7 +72,8 @@ public class TicketCtrl {
                 (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Optional<User> usr = userService.getUser(userTmp.getUsername());
 
-        validateFile(ticketDTO, file);
+        if(file != null)
+            validateFile(ticketDTO, file);
         ticketService.createTicket(ticketDTO, usr.get());
         return "redirect:/tickets";
     }
@@ -154,5 +171,88 @@ public class TicketCtrl {
         }
         return ResponseEntity.ok(filteredTickets);
     }
+
+    @GetMapping("/board")
+    public String showBoard(Model model) {
+        var list = ticketService.getTickets();
+        model.addAttribute("tickets", list);
+        var allOpened = ticketService.getTickets().stream().filter(t -> t.getStatus() == Status.OPEN).toList().size();
+        var allInProgress = ticketService.getTickets().stream().filter(t -> t.getStatus() == Status.IN_PROGRESS).toList().size();
+
+        AtomicInteger totalTimeMinutes = new AtomicInteger();
+        ticketService.getTickets().forEach(
+                ticket -> {
+                    if((ticket.getStatus() == Status.OPEN || ticket.getStatus() == Status.IN_PROGRESS) && ticket.getEstimate() != null)
+                        totalTimeMinutes.addAndGet(ticket.getEstimate().getMinute() + ticket.getEstimate().getHour() * 60);
+                }
+        );
+
+        AtomicInteger totalSpentMinutes = new AtomicInteger();
+        ticketService.getTickets().forEach(
+                ticket -> {
+                    if((ticket.getStatus() == Status.OPEN || ticket.getStatus() == Status.IN_PROGRESS) && ticket.getTimeSpent() != null)
+                        totalSpentMinutes.addAndGet(ticket.getTimeSpent().getMinute() + ticket.getTimeSpent().getHour() * 60);
+                }
+        );
+
+        double progress = (double) totalSpentMinutes.get() / totalTimeMinutes.get() *   100;
+        System.out.println("------------------------------------");
+        System.out.println("totalSpent="+ totalSpentMinutes.get());
+        System.out.println("totalTimeMinutes="+ totalTimeMinutes.get());
+        System.out.println("progress="+ progress);
+        System.out.println("------------------------------------");
+        model.addAttribute("allOpened", allOpened);
+        model.addAttribute("allInProgress", allInProgress);
+        model.addAttribute("progress", (int) progress);
+
+        return "board";
+    }
+
+    @GetMapping("{id}/editTime")
+    public String editTime(@PathVariable Long id,  Model model) {
+        var ticket = ticketService.getTicket(id);
+        model.addAttribute("ticket", ticket);
+        return "editTime";
+    }
+
+
+    @PostMapping("{id}/editTime")
+    public String saveTimeEdite(@PathVariable Long id, @ModelAttribute TicketDTO ticketDTO) {
+        ticketService.updateSpentTime(id, ticketDTO);
+        return "redirect:/tickets/{id}";
+    }
+
+    @GetMapping("{id}/info")
+    public ResponseEntity<Ticket> requestInfoTime(@PathVariable Long id) {
+        Optional<Ticket> tck = ticketService.getTicket(id);
+        System.out.println("A");
+        return tck.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.noContent().build());
+    }
+
+
+    @GetMapping("watched")
+    public String watchedTickets(Model model) {
+
+        org.springframework.security.core.userdetails.User userTmp =
+                (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Optional<User> usr = userService.getUser(userTmp.getUsername());
+
+
+        var tickets = ticketService.getTickets();
+        model.addAttribute("tickets", tickets);
+        model.addAttribute("currentUser", usr.get());
+        return "watched";
+    }
+
+    @GetMapping("{id}/watch")
+    public String watchTicket(@PathVariable Long id) {
+        org.springframework.security.core.userdetails.User userTmp =
+                (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        userService.addWatchedTicket(userTmp.getUsername(), ticketService.getTicket(id).get());
+
+        return "index";
+    }
+
 }
 

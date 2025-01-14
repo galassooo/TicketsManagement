@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Insert a Ticket</title>
+    <link rel="stylesheet" th:href="@{/CSS/watched.css}">
+    <link rel="stylesheet" th:href="@{/CSS/master.css}">
+
+</head>
+
+<body>
+<div th:insert="~{master::header}"></div>
+<nav>
+    <ul>
+        <li><a th:href="@{/tickets}">Home page</a></li>
+    </ul>
+</nav>
+<main>
+    <div id="rows">
+        <section id="watched_tickets">
+            <h2>Ticket In Lavorazione</h2>
+            <article th:each="ticket : ${tickets}" th:if="${currentUser.getTickets().contains(ticket)}">
+                <h3 th:text="${ticket.title}"></h3>
+                <p th:text="${ticket.description}"></p>
+                <p>Data:
+                    <time th:text="${#temporals.format(ticket.date, 'dd/MM/yyyy HH:mm')}"></time>
+                </p>
+                <p>Stato: <strong th:text="${ticket.status}"></strong></p>
+                <p>Tipo: <strong th:text="${ticket.type}"></strong></p>
+                <p>Utente: <em th:text="${ticket.user != null ? ticket.user.username : 'Nessun utente'}"></em></p>
+                <a th:href="@{/tickets/{id}(id=${ticket.id})}" class="btn btn-primary">Info</a>
+            </article>
+        </section>
+
+    </div>
+
+</main>
+</body>
+
+</html>

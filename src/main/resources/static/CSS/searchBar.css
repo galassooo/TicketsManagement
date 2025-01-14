@@ -23,7 +23,7 @@ form input[type="text"]:hover {
     background-color: #564857;
 }
 
-button {
+.search-container button {
     background-color: transparent;
     border: none;
     width: 25px;

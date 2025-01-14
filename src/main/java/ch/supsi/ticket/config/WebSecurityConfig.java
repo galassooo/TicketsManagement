@@ -30,8 +30,11 @@ public class WebSecurityConfig {
                         .logoutSuccessUrl("/tickets/")
                         .permitAll())
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/tickets/new").authenticated()
                         .requestMatchers( "/tickets", "/tickets/*", "/tickets/register").permitAll()
+                        .requestMatchers("/tickets/new").authenticated()
+                        .requestMatchers("/tickets/watched").authenticated()
+                        .requestMatchers("/tickets/*/editTime").authenticated()
+                        .requestMatchers("/tickets/board").authenticated()
                         .requestMatchers("/tickets/login").permitAll()
                         .requestMatchers("/CSS/*", "/js/*","/CSS/ticket.html", "/images/**", "/aside.html").permitAll() //risorse statiche
                         .requestMatchers("/webjars/*").permitAll()

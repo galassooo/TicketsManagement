@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Insert a Ticket</title>
+    <link rel="stylesheet" th:href="@{/CSS/editTime.css}">
+    <link rel="stylesheet" th:href="@{/CSS/master.css}">
+
+</head>
+
+<body>
+<div th:insert="~{master::header}"></div>
+<nav>
+    <ul>
+        <li><a th:href="@{/tickets}">Home page</a></li>
+    </ul>
+</nav>
+<main>
+
+    <main>
+        <!-- Messaggio di errore se il ticket non esiste -->
+        <div th:if="${!ticket.present}" class="error-message">
+            <h2>Ticket non trovato</h2>
+            <p>Il ticket richiesto non esiste.</p>
+        </div>
+
+        <!-- Dettagli del ticket se esiste -->
+        <article th:if="${ticket.present}">
+            <h2 th:text="${'Ticket #' + ticket.get().id + ': ' + ticket.get().title}">Ticket Title</h2>
+            <form id="form" th:action="@{/tickets/{id}/editTime (id=${ticket.get().id})}" method="POST">
+            <div>
+                <strong>Edit spent time:</strong>
+                <div class="estimate-form">
+                    <label for="timeSpent">Spent Time</label>
+                    <input type="time" id="timeSpent" name="timeSpent" required th:value="${ticket.get().timeSpent}">
+                </div>
+            </div>
+                <div id="buttonDiv">
+                <button type="submit" >Save</button>
+
+                </div>
+            </form>
+        </article>
+    </main>
+</main>
+
+<div th:insert="~{master::footer}"></div>
+</body>
+</html>

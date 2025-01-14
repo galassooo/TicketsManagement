@@ -17,6 +17,7 @@ header {
     align-items: center;
     background-color: #222;
     color: #fff;
+    height: 50px;
     padding: 20px;
 }
 
@@ -27,6 +28,13 @@ header {
 }
 
 .header-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* Aggiungi questo nuovo stile per il contenitore dell'utente autenticato */
+.header-right > div {
     display: flex;
     align-items: center;
     gap: 15px;
@@ -75,7 +83,7 @@ header {
     text-indent: 0 !important;
     text-shadow: none !important;
     min-width: auto !important;
-    min-height: auto !important;
+    min-height: 20px !important;
     max-width: none !important;
     max-height: none !important;
     overflow: visible !important;
