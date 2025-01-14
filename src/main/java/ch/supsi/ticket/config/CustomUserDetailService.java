@@ -16,7 +16,7 @@ import java.util.Optional;
 @Service
 public class CustomUserDetailService implements UserDetailsService {
 
-    private UserService userService;
+    private final UserService userService;
 
     public CustomUserDetailService(UserService userService){
         this.userService = userService;

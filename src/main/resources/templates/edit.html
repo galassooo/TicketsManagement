@@ -61,11 +61,11 @@
             </div>
 
             <div class="form-group">
-                <label>Data Creazione</label>
-                <input type="text" th:value="${#temporals.format(ticket.date, 'dd/MM/yyyy HH:mm')}" readonly class="readonly-input">
+                <label for="dataCreazione">Data Creazione</label>
+                <input id="dataCreazione" type="text" th:value="${#temporals.format(ticket.date, 'dd/MM/yyyy HH:mm')}" readonly class="readonly-input">
             </div>
             <div class="file-att">
-                <label >Modifica allegato</label>
+                <label for="file" >Modifica allegato</label>
                 <input id="file" type="file" name="file">
 
                 <p th:if="${ticket.attachment != null}"
