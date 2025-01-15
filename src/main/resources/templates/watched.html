@@ -18,7 +18,7 @@
 <main>
     <div id="rows">
         <section id="watched_tickets">
-            <h2>Ticket In Lavorazione</h2>
+            <h2 th:text="' Watching '+${currentUser.tickets.size()} + ' tickets'"></h2>
             <article th:each="ticket : ${tickets}" th:if="${currentUser.getTickets().contains(ticket)}">
                 <h3 th:text="${ticket.title}"></h3>
                 <p th:text="${ticket.description}"></p>

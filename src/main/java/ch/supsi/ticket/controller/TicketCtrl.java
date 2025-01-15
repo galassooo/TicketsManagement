@@ -178,6 +178,7 @@ public class TicketCtrl {
         model.addAttribute("tickets", list);
         var allOpened = ticketService.getTickets().stream().filter(t -> t.getStatus() == Status.OPEN).toList().size();
         var allInProgress = ticketService.getTickets().stream().filter(t -> t.getStatus() == Status.IN_PROGRESS).toList().size();
+        var allClosed = ticketService.getTickets().stream().filter(t -> t.getStatus() == Status.CLOSED).toList().size();
 
         AtomicInteger totalTimeMinutes = new AtomicInteger();
         ticketService.getTickets().forEach(
@@ -196,14 +197,17 @@ public class TicketCtrl {
         );
 
         double progress = (double) totalSpentMinutes.get() / totalTimeMinutes.get() *   100;
-        System.out.println("------------------------------------");
-        System.out.println("totalSpent="+ totalSpentMinutes.get());
-        System.out.println("totalTimeMinutes="+ totalTimeMinutes.get());
-        System.out.println("progress="+ progress);
-        System.out.println("------------------------------------");
+
+
+        org.springframework.security.core.userdetails.User userTmp =
+                (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Optional<User> usr = userService.getUser(userTmp.getUsername());
+
         model.addAttribute("allOpened", allOpened);
         model.addAttribute("allInProgress", allInProgress);
         model.addAttribute("progress", (int) progress);
+        model.addAttribute("allClosed", allClosed);
+        model.addAttribute("currentUser", usr.get());
 
         return "board";
     }
@@ -219,7 +223,7 @@ public class TicketCtrl {
     @PostMapping("{id}/editTime")
     public String saveTimeEdite(@PathVariable Long id, @ModelAttribute TicketDTO ticketDTO) {
         ticketService.updateSpentTime(id, ticketDTO);
-        return "redirect:/tickets/{id}";
+        return "redirect:/tickets/board";
     }
 
     @GetMapping("{id}/info")

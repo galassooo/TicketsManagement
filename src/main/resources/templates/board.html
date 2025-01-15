@@ -22,11 +22,15 @@
         <div id="item1">
             <section id="open_tickets">
                 <h2>Open Tickets</h2>
-                <a id="open-link"  th:each="ticket : ${tickets}" th:if="${ticket.status.name() == 'OPEN'}">
+                <a id="open-link" th:each="ticket : ${tickets}" th:if="${ticket.status.name() == 'OPEN'}">
                     <article th:id="${ticket.id}">
-                    <h3 th:text="${ticket.title}"></h3>
-                    <p>Tipo: <strong th:text="${ticket.type}"></strong></p>
-                    <p>Utente: <em th:text="${ticket.assignee != null ? ticket.assignee.username : 'Nessun utente'}"></em></p>
+                        <h3 th:text="${ticket.title}"></h3>
+                        <p>Tipo: <strong th:text="${ticket.type}"></strong></p>
+                        <p>Assignee: <em
+                                th:text="${ticket.assignee != null ? ticket.assignee.username : 'Nessun utente'}"></em>
+                        </p>
+                        <a id="open_edit"  th:if="${ticket.assignee == currentUser}"
+                           th:href="@{/tickets/{id}/editTime(id=${ticket.id})}" class="btn btn-primary">EditTime</a>
                     </article>
                 </a>
             </section>
@@ -36,9 +40,13 @@
                 <h2>In progress Tickets</h2>
                 <a id="progress-link" th:each="ticket : ${tickets}" th:if="${ticket.status.name() == 'IN_PROGRESS'}">
                     <article th:id="${ticket.id}">
-                    <h3 th:text="${ticket.title}"></h3>
-                    <p>Tipo: <strong th:text="${ticket.type}"></strong></p>
-                    <p>Utente: <em th:text="${ticket.assignee != null ? ticket.assignee.username : 'Nessun utente'}"></em></p>
+                        <h3 th:text="${ticket.title}"></h3>
+                        <p>Tipo: <strong th:text="${ticket.type}"></strong></p>
+                        <p>Assignee: <em
+                                th:text="${ticket.assignee != null ? ticket.assignee.username : 'Nessun utente'}"></em>
+                        </p>
+                        <a id="progress_edit" th:if="${ticket.assignee != null && ticket.assignee == currentUser}"
+                           th:href="@{/tickets/{id}/editTime(id=${ticket.id})}" class="btn btn-primary">EditTime</a>
                     </article>
                 </a>
             </section>
@@ -48,21 +56,40 @@
                 <h2>Closed Tickets</h2>
                 <a id="closed-link" th:each="ticket : ${tickets}" th:if="${ticket.status.name() == 'CLOSED'}">
                     <article th:id="${ticket.id}">
-                    <h3 th:text="${ticket.title}"></h3>
-                    <p>Tipo: <strong th:text="${ticket.type}"></strong></p>
-                    <p>Utente: <em th:text="${ticket.assignee != null ? ticket.assignee.username : 'Nessun utente'}"></em></p>
-                </article>
+                        <h3 th:text="${ticket.title}"></h3>
+                        <p>Tipo: <strong th:text="${ticket.type}"></strong></p>
+                        <p>Assignee: <em
+                                th:text="${ticket.assignee != null ? ticket.assignee.username : 'Nessun utente'}"></em>
+                        </p>
+                        <a id="closed_edit" th:if="${ticket.assignee == currentUser}"
+                           th:href="@{/tickets/{id}/editTime(id=${ticket.id})}" class="btn btn-primary">EditTime</a>
+                    </article>
                 </a>
             </section>
         </div>
 
         <div id="item4">
-            <section id="InfoBar">
+            <section id="GenericInfoBar">
                 <h2>Progress Status</h2>
-                <progress id="progressBar" th:value="${progress}" max="100" th:content="${progress}"> 32% </progress>
+                <h4>Total progress</h4>
+                <progress id="progressBar" th:value="${progress}" max="100" th:content="${progress}"></progress>
                 <p>In Progress: <strong th:text="${allInProgress}"></strong></p>
                 <p>Opened: <strong th:text="${allOpened}"></strong></p>
+                <p>Closed: <strong th:text="${allClosed}"></strong></p>
+                <hr>
+                <div th:each="ticket : ${tickets}" th:if="${ticket.estimate != null}">
+                    <h4 th:text="${ticket.title}"></h4>
+                    <progress
+                            th:value="${ticket.timeSpent != null && (ticket.estimate.hour * 60 + ticket.estimate.minute) > 0 ?
+            (ticket.timeSpent.hour * 60 + ticket.timeSpent.minute) * 100 / (ticket.estimate.hour * 60 + ticket.estimate.minute)
+            : 0}"
+                            max="100">
+                    </progress>
+                </div>
+                <div id="InfoBar">
+                </div>
             </section>
+
         </div>
     </div>
 
