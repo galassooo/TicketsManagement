@@ -1,17 +1,14 @@
 package ch.supsi.ticket.service;
 
-import ch.supsi.ticket.model.Ticket;
 import ch.supsi.ticket.model.User;
 import ch.supsi.ticket.model.UserRole;
 import ch.supsi.ticket.repository.UserRepository;
 import jakarta.annotation.PostConstruct;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,11 +40,9 @@ public class UserService {
 
     @PostConstruct
     private void init() {
-        if (!repo.existsById("_admin")) {
-            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-            User use = new User("_admin", "name", "surname", encoder.encode("password"), UserRole.ROLE_ADMIN);
-            repo.save(use);
-        }
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        User use = new User("_admin", "name", "surname", encoder.encode("password"), UserRole.ROLE_ADMIN);
+        repo.save(use);
     }
 
     public Optional<User> getUser(String id) {
@@ -83,19 +78,5 @@ public class UserService {
             return true;
         }
         return false;
-    }
-
-    public void addWatchedTicket(String username, Ticket ticket) {
-        Optional<User> userOpt = repo.findById(username);
-        if (userOpt.isPresent()) {
-            User user = userOpt.get();
-            if (user.getTickets() == null) {
-                user.setTickets(new HashSet<>());
-            }
-            user.getTickets().add(ticket);
-
-            // Salva entrambe le entità
-            repo.save(user);
-        }
     }
 }

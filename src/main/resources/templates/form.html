@@ -38,27 +38,6 @@
                 <textarea id="description" name="description" required></textarea>
             </div>
 
-            <div class="date-form">
-                <label for="dateForm">Due date</label>
-                <input type="date" id="dateForm" name="due_date" required></input>
-            </div>
-
-            <div class="estimate-form">
-                <label for="estimate">Estimate Time</label>
-                <input type="time" id="estimate" name="estimate" required></input>
-            </div>
-
-            <div class="assignee-form">
-                <label for="assignee">Assignee</label>
-                <select id="assignee" name="assignee" required>
-                    <option value="">Select assignee</option>
-                    <option th:each="user : ${users}"
-                            th:value="${user.getUsername()}"
-                            th:text="${user.getUsername()}">
-                    </option>
-                </select>
-            </div>
-
             <div class="file-att">
                 <label for="file">Aggiungi allegato</label>
                 <input id="file" type="file" name="file">

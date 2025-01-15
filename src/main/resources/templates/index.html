@@ -12,15 +12,13 @@
 <nav>
     <ul>
         <li><a th:href="@{/tickets/new}">Create page</a></li>
-        <li><a th:href="@{/tickets/board}">Board</a></li>
-        <li><a th:href="@{/tickets/watched}">Watched</a></li>
     </ul>
 </nav>
 <main>
     <div id="ticketsContainer">
         <section id="open_tickets">
             <h2>Ticket Aperti</h2>
-            <article th:style="${currentUser!= null && ticket.watchers.contains(currentUser) ? 'border-color :green' : ''}" th:each="ticket : ${tickets}" th:if="${ticket.status.name() == 'OPEN'}">
+            <article th:each="ticket : ${tickets}" th:if="${ticket.status.name() == 'OPEN'}">
                 <h3 th:text="${ticket.title}"></h3>
                 <p th:text="${ticket.description}"></p>
                 <p>Data:
@@ -36,8 +34,7 @@
         <section id="closed_tickets">
             <h2>Ticket Chiusi</h2>
 
-            <article th:style="${currentUser!= null && ticket.watchers.contains(currentUser) ? 'border-color :green' : ''}"  th:each="ticket : ${tickets}" th:if="${ticket.status.name() == 'CLOSED'}">
-
+            <article th:each="ticket : ${tickets}" th:if="${ticket.status.name() == 'CLOSED'}">
                 <h3 th:text="${ticket.title}"></h3>
                 <p th:text="${ticket.description}"></p>
                 <p>Data:
@@ -52,7 +49,7 @@
 
         <section id="processing_tickets">
             <h2>Ticket In Lavorazione</h2>
-            <article th:style="${currentUser!= null && ticket.watchers.contains(currentUser) ? 'border-color :green' : ''}"  th:each="ticket : ${tickets}" th:if="${ticket.status.name() == 'IN_PROGRESS'}">
+            <article th:each="ticket : ${tickets}" th:if="${ticket.status.name() == 'IN_PROGRESS'}">
                 <h3 th:text="${ticket.title}"></h3>
                 <p th:text="${ticket.description}"></p>
                 <p>Data:

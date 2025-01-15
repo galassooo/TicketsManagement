@@ -2,15 +2,9 @@ package ch.supsi.ticket.service;
 
 import ch.supsi.ticket.model.*;
 import ch.supsi.ticket.repository.TicketRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.sql.init.SqlInitializationAutoConfiguration;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
-
-import java.text.SimpleDateFormat;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -45,32 +39,11 @@ public class TicketService {
         System.out.println("Type: "+ticketDTO.getType());
         System.out.println("username: "+ticketDTO.getUsername());
 
-        if(ticketDTO.getAttachment() != null)
-            attachmentService.save(ticketDTO.getAttachment());
-        return ticketRepository.save(new Ticket(user ,ticketDTO.getDescription(), ticketDTO.getTitle(), ticketDTO.getType(), ticketDTO.getAttachment(), ticketDTO.getAssignee(), ticketDTO.getEstimate(), ticketDTO.getDue_date() ));
+
+        attachmentService.save(ticketDTO.getAttachment());
+        return ticketRepository.save(new Ticket(user ,ticketDTO.getDescription(), ticketDTO.getTitle(), ticketDTO.getType(), ticketDTO.getAttachment()));
     }
 
-    public Ticket updateSpentTime(Long id, TicketDTO ticketDTO) {
-        Optional<Ticket> oldTicket = ticketRepository.findById(id);
-        if(oldTicket.isPresent()) {
-            Ticket tck = oldTicket.get();
-
-            tck.setTimeSpent(ticketDTO.getTimeSpent());
-            tck.setTitle(tck.getTitle());
-            tck.setType(tck.getType());
-            tck.setAssignee(tck.getAssignee());
-            tck.setEstimate(tck.getEstimate());
-            tck.setDue_date(tck.getDue_date());
-            tck.setDescription(tck.getDescription());
-            tck.setAttachment(tck.getAttachment());
-            tck.setUser(tck.getUser());
-            tck.setStatus(tck.getStatus());
-            tck.setType(tck.getType());
-
-            return ticketRepository.save(tck);
-        }
-        return null;
-    }
     public Ticket updateTicket(Long id, TicketDTO ticketDto) {
         Optional<Ticket> oldTicket = ticketRepository.findById(id);
         if(oldTicket.isPresent()) {

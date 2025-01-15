@@ -87,20 +87,20 @@ article em {
 article a {
     background-color: #d4a5d5;
     color: #000;
-    padding: 8px 16px;  /* Fixed padding instead of percentage height */
-    margin-top: 10px;
+    padding: 5px;
+    margin-top: 20px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 16px;
     font-weight: bold;
     transition: all 0.3s ease;
     display: inline-block;
-    min-width: 60px;    /* Minimum width instead of percentage */
+    width: 15%;
+    height: 10%;
     text-decoration: none;
     text-align: center;
 }
-
 
 article a:hover {
     background-color: #c08bbd;
