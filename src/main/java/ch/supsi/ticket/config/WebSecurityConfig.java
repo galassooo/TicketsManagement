@@ -31,6 +31,10 @@ public class WebSecurityConfig {
                         .permitAll())
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/tickets/new").authenticated()
+                        .requestMatchers("/tickets/milestones").authenticated()
+                        .requestMatchers("/tickets/milestones/new").authenticated()
+                        .requestMatchers("/tickets/milestones/*/complete").hasRole("ADMIN")
+                        .requestMatchers("/tickets/milestones/*").authenticated()
                         .requestMatchers( "/tickets", "/tickets/*", "/tickets/register").permitAll()
                         .requestMatchers("/tickets/login").permitAll()
                         .requestMatchers("/CSS/*", "/js/*","/CSS/ticket.html", "/images/**", "/aside.html").permitAll() //risorse statiche

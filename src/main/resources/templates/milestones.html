@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Tickets</title>
+    <link rel="stylesheet" th:href="@{/CSS/milestonesStyle.css}">
+    <link rel="stylesheet" th:href="@{/CSS/master.css}">
+</head>
+<body>
+<div th:insert="~{master::header}"></div>
+
+<div th:replace="~{master::navbar(~{::li})}">
+    <li><a th:href="@{/tickets/new}">Create page</a></li>
+    <li><a th:href="@{/tickets/milestone/new}">Create milestone</a></li>
+</div>
+<main>
+
+    <section id="milestones">
+        <h2>Open Milestone</h2>
+        <article th:each="milestone : ${milestones}">
+            <h3 th:text="${milestone.title}"></h3>
+            <p th:text="${milestone.description}"></p>
+            <p>Due date:
+                <time th:text="${#temporals.format(milestone.dueDate, 'dd/MM/yyyy')}"></time>
+            </p>
+            <p id="completedFlag">Stato: <strong th:text="${milestone.completed} ? Completed : Opened"></strong></p>
+            <p>Creator: <strong th:text="${milestone.author == null ? notAvailable : milestone.author.username}"></strong></p>
+            <progress id="progressBar" th:value="${progresses.get(milestone.id)}" th:max="${total.get(milestone.getId())}" th:content="${progresses.get(milestone.id)}"></progress>
+            <h5 style="color: white" th:text="${progresses.get(milestone.id) / (total.get(milestone.getId()) == 0 ? 1 : total.get(milestone.getId()) ) * 100}+'% complete'"></h5>
+            <br>
+            <h2>Tickets</h2>
+            <article th:each="ticket : ${milestone.getTickets()}">
+                <h3 th:text="${ticket.title}"></h3>
+                <p>Stato: <strong th:text="${ticket.status}"></strong></p>
+            </article>
+
+            <a th:href="@{/tickets/milestones/{id}/add (id=${milestone.id})}" class="btn btn-primary">Add ticket</a>
+            <div id="complete_container">
+                <a  id="complete_link" th:if="${!milestone.completed}" th:href="@{/tickets/milestones/{id}/complete (id=${milestone.id})}" class="btn btn-primary">Complete</a>
+            </div>
+
+        </article>
+    </section>
+
+</main>
+<div th:insert="~{master::footer}"></div>
+</body>
+<script th:src="@{/js/completeMilestone.js}"></script>
+</html>

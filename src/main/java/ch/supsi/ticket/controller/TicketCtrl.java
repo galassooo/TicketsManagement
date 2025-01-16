@@ -2,9 +2,11 @@ package ch.supsi.ticket.controller;
 
 import ch.supsi.ticket.model.*;
 
+import ch.supsi.ticket.service.MilestoneService;
 import ch.supsi.ticket.service.TicketService;
 import ch.supsi.ticket.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,8 +17,10 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import static ch.supsi.ticket.model.Status.DONE;
 
 @Controller
 @RequestMapping("/tickets")
@@ -27,6 +31,9 @@ public class TicketCtrl {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private MilestoneService milestoneService;
 
     @GetMapping("")
     public String index(Model model) {
@@ -154,5 +161,110 @@ public class TicketCtrl {
         }
         return ResponseEntity.ok(filteredTickets);
     }
+
+    @GetMapping("/milestone/new")
+    public String  mileStoneCreatePage() {
+        return "milestoneCreate";
+    }
+    @PostMapping("/milestone/new")
+    public String createMilestone(@ModelAttribute Milestone milestone) {
+        // Prendiamo l'utente direttamente dal contesto di sicurezza
+        org.springframework.security.core.userdetails.User userTmp =
+                (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Optional<User> usr = userService.getUser(userTmp.getUsername());
+
+        milestoneService.createMilestone(milestone, usr.get());
+        return "redirect:/tickets/milestones";
+    }
+
+
+    @GetMapping("/milestones")
+    public String searchParam(Model model) {
+        var milestones = milestoneService.getMilestones();
+        /*
+
+        con .stream().sorted(Comparator.comparing(Milestone::getDueDate));
+
+        mi dava un multiple use della stream e quindi errore in run, non so perche, ma fa la stessa cosa
+
+         */
+
+        milestones.sort(Comparator.comparing(Milestone::getCreationDate));
+
+        Map<Long, Integer> progresses = new HashMap<>();
+        Map<Long, Integer> totals = new HashMap<>();
+
+        milestones.forEach(milestone -> {
+           int ticketNumber = milestone.getTickets().size();
+           AtomicInteger completed = new AtomicInteger();
+                   milestone.getTickets().forEach( ticket ->
+                   {
+                       completed.addAndGet(ticket.getStatus() == DONE || ticket.getStatus() == Status.CLOSED ? 1 : 0);
+                   }
+           );
+                   progresses.put(milestone.getId(), completed.get());
+                   totals.put(milestone.getId(), ticketNumber);
+        });
+
+        model.addAttribute("total",totals );
+        model.addAttribute("milestones", milestones);
+
+        System.out.println("MILESTONES");
+        milestones.forEach(System.out::println);
+        model.addAttribute("progresses", progresses);
+        return "milestones";
+    }
+
+
+    @GetMapping("/milestones/{id}/add")
+    public String addTicketMilestone(@PathVariable Long id, Model model) {
+
+        //sicuro che esista altrimenti non avrei la pagine
+        model.addAttribute("milestone", milestoneService.getMilestone(id).get());
+        model.addAttribute("tickets", ticketService.getTickets());
+        return "addTicketMilestone";
+    }
+
+
+    @GetMapping("/milestones/{id}/add/{t_id}")
+    public String addTicketToMilestone(@PathVariable Long id, @PathVariable Long t_id,Model model) {
+        milestoneService.addTicket(ticketService.getTicket(t_id).get(), milestoneService.getMilestone(id).get());
+        //sicuro che esista altrimenti non avrei la pagine
+        model.addAttribute("milestone", milestoneService.getMilestone(id).get());
+        model.addAttribute("tickets", ticketService.getTickets());
+        return "redirect:/tickets/milestones/{id}/add";
+    }
+
+    @GetMapping("/milestones/{id}/complete")
+    public  ResponseEntity<Milestone> completeTicketMilestone(@PathVariable Long id) {
+        org.springframework.security.core.userdetails.User userTmp =
+                (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Optional<User> usr = userService.getUser(userTmp.getUsername());
+
+        if (usr.isEmpty() || usr.get().getRole() != UserRole.ROLE_ADMIN) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        Milestone milestone = milestoneService.complete(id).get();
+        return ResponseEntity.ok(milestone);
+    }
+
+    @GetMapping("/{id}/changeStatus")
+    public  ResponseEntity<Ticket> changeStatus(@PathVariable Long id) {
+        List<Status> statusList = List.of(Status.OPEN, Status.IN_PROGRESS, Status.DONE, Status.CLOSED);
+
+        Ticket ticket = ticketService.getTicket(id).get();
+
+        var tckStatus = ticket.getStatus();
+
+        int index = statusList.indexOf(tckStatus);
+        if(index == statusList.size()-1 ){
+            return ResponseEntity.ok(ticket);
+        }else{
+            ticket = ticketService.updateStatus(id, statusList.get(index+1));
+            return ResponseEntity.ok(ticket);
+        }
+    }
+
 }
 

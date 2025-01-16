@@ -40,9 +40,11 @@ public class UserService {
 
     @PostConstruct
     private void init() {
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        User use = new User("_admin", "name", "surname", encoder.encode("password"), UserRole.ROLE_ADMIN);
-        repo.save(use);
+        if(!repo.existsById("_admin")) {
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+            User use = new User("_admin", "name", "surname", encoder.encode("password"), UserRole.ROLE_ADMIN);
+            repo.save(use);
+        }
     }
 
     public Optional<User> getUser(String id) {

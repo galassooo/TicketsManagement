@@ -34,11 +34,6 @@ public class TicketService {
 
 
     public Ticket createTicket(TicketDTO ticketDTO, User user) {
-        System.out.println("description: "+ticketDTO.getDescription());
-        System.out.println("title: "+ticketDTO.getTitle());
-        System.out.println("Type: "+ticketDTO.getType());
-        System.out.println("username: "+ticketDTO.getUsername());
-
 
         attachmentService.save(ticketDTO.getAttachment());
         return ticketRepository.save(new Ticket(user ,ticketDTO.getDescription(), ticketDTO.getTitle(), ticketDTO.getType(), ticketDTO.getAttachment()));
@@ -90,4 +85,27 @@ public class TicketService {
                         .contains(q.toLowerCase()))
                 .collect(Collectors.toList());
     }
+
+    public Ticket updateStatus(Long id, Status status) {
+
+        Optional<Ticket> oldTicket = ticketRepository.findById(id);
+        if(oldTicket.isPresent()) {
+            Ticket tck = oldTicket.get();
+
+            tck.setTitle(tck.getTitle());
+            tck.setType(tck.getType());
+            tck.setDescription(tck.getDescription());
+            tck.setAttachment(tck.getAttachment());
+            tck.setUser(tck.getUser());
+            tck.setStatus(status);
+            tck.setMilestones(tck.getMilestones());
+            tck.setType(tck.getType());
+
+            return ticketRepository.save(tck);
+        }
+        return null;
+
+    }
+
+
 }

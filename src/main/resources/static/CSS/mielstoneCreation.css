@@ -1,0 +1,160 @@
+
+/* Stili per la sezione */
+section {
+    background-color: #232323;
+    padding: 40px;
+    border-radius: 8px;
+    max-width: 600px;
+    width: 100%;
+    margin: 0 auto;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+section h2 {
+    color: #ffffff;
+    border-bottom: 2px solid #d4a5d5;
+    padding-bottom: 15px;
+    margin-top: 0;
+    margin-bottom: 30px;
+    font-size: 24px;
+}
+
+/* Formattazione del form */
+form[id="form"] {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+label {
+    color: #d4a5d5;
+    font-weight: bold;
+    display: block;
+    margin-bottom: 8px;
+}
+
+/* Stile per input, textarea e select */
+input[type="text"],
+textarea,
+select {
+    width: 100%;
+    padding: 12px;
+    background-color: #1e1e1e;
+    border: 1px solid #444;
+    border-radius: 5px;
+    color: #eee;
+    font-size: 16px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+input[type="text"]::placeholder,
+textarea::placeholder {
+    color: #888;
+}
+
+/* Stili specifici per textarea */
+textarea {
+    resize: vertical;
+    min-height: 200px;
+}
+
+/* Dropdown styling */
+select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23d4a5d5' viewBox='0 0 16 16'%3E%3Cpath d='M8 10.5l4-4H4l4 4z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 12px;
+    padding-right: 40px;
+    cursor: pointer;
+}
+
+/* Stile per le opzioni del dropdown */
+select option {
+    background-color: #1e1e1e;
+    color: #eee;
+    padding: 12px;
+}
+
+/* Focus states */
+input[type="text"]:focus,
+textarea:focus,
+select:focus {
+    outline: none;
+    border-color: #d4a5d5;
+    box-shadow: 0 0 0 2px rgba(212, 165, 213, 0.2);
+}
+
+/* Hover states */
+select:hover {
+    border-color: #d4a5d5;
+}
+
+/* Button styling */
+button[type="submit"] {
+    background-color: #d4a5d5;
+    color: #000;
+    padding: 15px;
+    margin-top: 30px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+button[type="submit"]:hover {
+    background-color: #c08bbd;
+    transform: translateY(-1px);
+}
+
+
+input[type="file"]::file-selector-button  {
+    background-color: #333;
+    color: #FFF;
+    width: 100px;
+    height: 30px;
+    margin-top: 10px;
+    font-size: 15px;
+    border-color: #c08bbd;
+    border-width: 1px;
+}
+
+input[type="file"]{
+    width: 400px;
+}
+
+input[type="file"]::first-line  {
+    font-size: 15px;
+    width: 100px;
+    color: #9c9c9c;
+    padding-left: 100px;
+}
+
+input[type="file"]::file-selector-button:hover  {
+    cursor: hand;
+}
+
+input[type="date"] {
+    background: transparent;
+    color: white;
+    border: none;
+}
+
+
+/* Media query */
+@media (max-width: 768px) {
+    section {
+        padding: 20px;
+    }
+
+    input[type="text"],
+    textarea,
+    select {
+        font-size: 14px;
+    }
+}

@@ -34,7 +34,7 @@
                 Data del ticket
             </time>
         </p>
-        <p>
+        <p id="StatusBox">
             <strong>Stato:</strong>
             <span th:class="${ticket.get().status.name().toLowerCase()}"
                   th:text="${ticket.get().status}">Stato del ticket</span>
@@ -60,9 +60,28 @@
                   th:text="'Nessun documento trovato'">
             </span>
         </p>
+
+
+
+        <form th:action="@{/tickets/{id}/edit(id=${ticket.get().id})}" method="POST">
+            <div class="form-group">
+                <label for="tag">Add tag</label>
+                <input type="text" id="tag" name="tag">
+            </div>
+            <div id="btn2"  class="button-group">
+                <button id="buttonTag" type="submit">Add tag</button>
+            </div>
+        </form>
+
+
+        <div id="btn">
+            <a id="changeStatusLink" th:href="@{/tickets/{id}/changeStatus (id=${ticket.get().id})}" >Edit status</a>
+        </div>
     </article>
 </main>
 
 <div th:insert="~{master::footer}"></div>
+
+<script th:src="@{/js/changeStatus.js}"></script>
 </body>
 </html>

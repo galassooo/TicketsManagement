@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Tickets</title>
-    <link rel="stylesheet" th:href="@{/CSS/indexStyle.css}">
+    <link rel="stylesheet" th:href="@{/CSS/milestonesStyle.css}">
     <link rel="stylesheet" th:href="@{/CSS/master.css}">
-    <link rel="stylesheet" th:href="@{/CSS/searchBar.css}">
 </head>
 <body>
 <div th:insert="~{master::header}"></div>
@@ -16,6 +15,7 @@
     <li><a th:href="@{/tickets/milestones}">milestones list</a></li>
 </div>
 <main>
+    <h2 th:text="' Adding tickets to milestone: '+${milestone.title} + ''"></h2>
     <div id="ticketsContainer">
         <section id="open_tickets">
             <h2>Ticket Aperti</h2>
@@ -28,7 +28,7 @@
                 <p>Stato: <strong th:text="${ticket.status}"></strong></p>
                 <p>Tipo: <strong th:text="${ticket.type}"></strong></p>
                 <p>Utente: <em th:text="${ticket.user != null ? ticket.user.username : 'Nessun utente'}"></em></p>
-                <a th:href="@{/tickets/{id}(id=${ticket.id})}" class="btn btn-primary">Info</a>
+                <a th:if="${!milestone.tickets.contains(ticket)}" th:href="@{/tickets/milestones/{id}/add/{t_id}(t_id=${ticket.id}, id=${milestone.id})}" class="btn btn-primary">Add</a>
             </article>
         </section>
 
@@ -44,7 +44,7 @@
                 <p>Stato: <strong th:text="${ticket.status}"></strong></p>
                 <p>Tipo: <strong th:text="${ticket.type}"></strong></p>
                 <p>Utente: <em th:text="${ticket.user != null ? ticket.user.username : 'Nessun utente'}"></em></p>
-                <a th:href="@{/tickets/{id}(id=${ticket.id})}" class="btn btn-primary">Info</a>
+                <a th:if="${!milestone.tickets.contains(ticket)}" th:href="@{/tickets/milestones/{id}/add/{t_id}(t_id=${ticket.id}, id=${milestone.id})}" class="btn btn-primary">Add</a>
             </article>
         </section>
 
@@ -59,7 +59,7 @@
                 <p>Stato: <strong th:text="${ticket.status}"></strong></p>
                 <p>Tipo: <strong th:text="${ticket.type}"></strong></p>
                 <p>Utente: <em th:text="${ticket.user != null ? ticket.user.username : 'Nessun utente'}"></em></p>
-                <a th:href="@{/tickets/{id}(id=${ticket.id})}" class="btn btn-primary">Info</a>
+                <a th:if="${!milestone.tickets.contains(ticket)}" th:href="@{/tickets/milestones/{id}/add/{t_id}(t_id=${ticket.id}, id=${milestone.id})}" class="btn btn-primary">Add</a>
             </article>
         </section>
 
@@ -75,23 +75,11 @@
                 <p>Stato: <strong th:text="${ticket.status}"></strong></p>
                 <p>Tipo: <strong th:text="${ticket.type}"></strong></p>
                 <p>Utente: <em th:text="${ticket.user != null ? ticket.user.username : 'Nessun utente'}"></em></p>
-                <a th:href="@{/tickets/{id}(id=${ticket.id})}" class="btn btn-primary">Info</a>
+                <a th:if="${!milestone.tickets.contains(ticket)}" th:href="@{/tickets/milestones/{id}/add/{t_id}(t_id=${ticket.id}, id=${milestone.id})}" class="btn btn-primary">Add</a>
             </article>
         </section>
     </div>
-    <aside>
-        <div class="search-container">
-            <form id="searchForm">
-                <label style="color: transparent; font-size: 0" for="searchField">Search...</label><input id="searchField" type="text" placeholder="Search.." name="search">
-                <button id="searchButton" type="button"><img id="immagineLente" style="width: 25px; height: 25px;"
-                                                             src="images/lente.png" alt="lente"></img></button>
-            </form>
-        </div>
-    </aside>
-
-
 </main>
 <div th:insert="~{master::footer}"></div>
 </body>
-<script th:src="@{/js/search.js}"></script>
 </html>
