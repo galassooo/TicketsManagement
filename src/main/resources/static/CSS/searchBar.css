@@ -27,7 +27,6 @@ button {
     background-color: transparent;
     border: none;
     width: 25px;
-    height: 25px;
     position: relative;
     top: 8px; /* Aggiustato per allineare con l'input */
 }

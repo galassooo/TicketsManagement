@@ -8,11 +8,9 @@
 </head>
 <body>
 <div th:insert="~{master::header}"></div>
-<nav>
-    <ul>
-        <li><a th:href="@{/tickets}">Home page</a></li>
-    </ul>
-</nav>
+<div th:replace="~{master::navbar(~{::li})}">
+    <li><a th:href="@{/tickets}">Home page</a></li>
+</div>
 <main>
     <h2 class="boardTitle">
         Progress board

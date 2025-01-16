@@ -8,11 +8,9 @@
 </head>
 <body>
 <div th:insert="~{master::header}"></div>
-<nav>
-    <ul style="list-style-type: none; padding: 0; display: flex; gap: 15px;">
-        <li><a th:href="@{/tickets}">Home page</a></li>
-    </ul>
-</nav>
+<div th:replace="~{master::navbar(~{::li})}">
+    <li><a th:href="@{/tickets}">Home</a></li>
+</div>
 <main>
     <div class="login-container">
         <h2>Welcome back!</h2>

@@ -9,11 +9,10 @@
 </head>
 <body>
 <div th:insert="~{master::header}"></div>
-<nav>
-    <ul>
-        <li><a th:href="@{/tickets/new}">Create page</a></li>
-    </ul>
-</nav>
+
+<div th:replace="~{master::navbar(~{::li})}">
+    <li><a th:href="@{/tickets/new}">Create page</a></li>
+</div>
 <main>
     <div id="ticketsContainer">
         <section id="open_tickets">

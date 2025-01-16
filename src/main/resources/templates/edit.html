@@ -8,11 +8,9 @@
 </head>
 <body>
 <div th:insert="~{master::header}"></div>
-<nav>
-    <ul style="list-style-type: none; padding: 0; display: flex; gap: 15px;">
-        <li><a th:href="@{/tickets}">Home page</a></li>
-    </ul>
-</nav>
+<div th:replace="~{master::navbar(~{::li})}">
+    <li><a th:href="@{/tickets}">Home page</a></li>
+</div>
 <main>
     <section>
         <h2 th:text="'Edit Ticket #' + ${ticket.id}">Edit Ticket</h2>

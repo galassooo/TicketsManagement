@@ -5,6 +5,11 @@
     <meta charset="UTF-8">
     <title th:insert="Tickets">Ticket Server</title>
 </head>
+<nav th:fragment="navbar(menuItems)">
+    <ul>
+        <th:block th:replace="${menuItems}" />
+    </ul>
+</nav>
 <body>
 <header th:fragment="header">
     <div class="header-left">

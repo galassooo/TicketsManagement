@@ -8,6 +8,10 @@
 <body>
 <div th:insert="~{master::header}"></div>
 
+<div th:replace="~{master::navbar(~{::li})}">
+    <li><a th:href="@{/tickets}">Home</a></li>
+</div>
+
 <main>
     <div class="register-container">
         <h2>Create Account</h2>
